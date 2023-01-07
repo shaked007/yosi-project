@@ -1,26 +1,48 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+<HelloWorld/>
 </template>
 
 <script>
+
 import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
+
   components: {
-    HelloWorld
-  }
+    HelloWorld,
+  },
+
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+
+<style >
+@font-face {
+  font-family: openSans;
+  src: url(@/assets/OpenSansHebrew-Bold.ttf);
 }
+
+body,html{
+  font-family: openSans;
+  min-height: 100vh;
+  
+}
+body{
+  background: linear-gradient(
+    to left,
+    rgba(0, 0, 0, 0.6),
+    rgba(0,0,0, 0.6)
+  ), url(@/assets/car.jpg);
+  
+
+
+  background-position: 70% 50%;
+
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+     @media (max-width: 480px) {
+        
+        }
 </style>
