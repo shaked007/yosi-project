@@ -18,6 +18,12 @@ export default {
 
 
 <style >
+ .v-text-field input   {
+  color: white;
+}
+ .v-text-field label{
+  color: white;
+ }
 @font-face {
   font-family: openSans;
   src: url(@/assets/OpenSansHebrew-Bold.ttf);
@@ -30,9 +36,9 @@ body,html{
 }
 body{
   background: linear-gradient(
-    to left,
-    rgba(0, 0, 0, 0.6),
-    rgba(0,0,0, 0.6)
+    to bottom,
+    rgba(0, 0, 0, 0.9),
+    rgba(0,0,0, 0)
   ), url(@/assets/car.jpg);
   
 

@@ -4,10 +4,21 @@
  <h6 class="current-date"> {{currentDate}} </h6>
  <div class="flex-and-submit-container">
   <form ref="report-form" :action="currentUrl" >
-    <div class="flex-inputs">
-      <input type="text" name="first">
+    <div class="grey-zone-container">
+      <div class="flex-inputs" > 
+        <h6 class="form-subtitle"> מילוי פרטים </h6>
+        <v-text-field
+          name="driber"
+            label="שם הנהג"
+          ></v-text-field>
+        <v-text-field
+          name="mashak-toran"
+            label="שם המשק תורן"
+          ></v-text-field>
+        <VueTimepicker/>
+</div>
     </div>
-    <button type="submit" @click.prevent="handleSubmit" v-ripple> סיים דוח </button></form>
+    <button type="submit"  @click.prevent="handleSubmit" v-ripple> סיים דוח </button></form>
   
   </div>
 
@@ -15,10 +26,12 @@
 
 <script>
 import moment from "moment"
+import VueTimepicker from 'vue3-timepicker/src/VueTimepicker.vue'
 export default {
 
   data(){
     return{
+      picker:new Date().toISOString().substr(0, 10),
       inputsObject:'',
       whatsappDomain:"whatsapp://send?",
       queryStringInputs:"",
@@ -29,7 +42,12 @@ export default {
       currentDate:  moment(new Date(),'L', 'he').format("יום dddd  D/M/y")
     }
   },
+  components:{
+    VueTimepicker
+  },
+
   methods:{
+    
     checkAllInputs(){
         return true;
     },
@@ -59,8 +77,29 @@ export default {
 </script>
 
 <style scoped >
+.form-subtitle{
+  
+  font-size: 1.4rem;
+}
+.grey-zone-container{
+
+ border-radius: 20px;
+  background-color: rgb(0,0,0,0.5);
+  direction: rtl !important;
+  width: 80%;
+    min-height: 80vh;
+  margin-left :auto;
+  margin-right:auto;
+  margin-bottom: 15px;
+}
 .flex-inputs{
-  min-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  color: white !important;
+  width: 80%;
+  gap: 10px 10px;
+  margin: 0 auto;
+  justify-content: flex-start;
 }
 button{
     margin: 0 auto;
@@ -69,13 +108,14 @@ button{
     padding: 0.5em 1.8em;
 }
 form{
+  padding-bottom: 20px;
   text-align: center;
 }
 .current-date{
   text-align: center;
   color: rgba(255, 255, 255, 0.781);
   font-size: 1.2rem;
-  
+  margin-bottom: 10px;
   font-weight: 400 !important;
 
 }
