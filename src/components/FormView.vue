@@ -64,7 +64,7 @@ export default {
       generatedLink:"",
       finalLink:"",
       message:"",
-      currentUrl:"https://m.youtube.com"+"?",
+      currentUrl:window.location.href+"?",
       currentDate:  moment(new Date(),'L', 'he').format("יום dddd  D/M/y")
     }
   },
