@@ -30,9 +30,16 @@ export default {
 }
 
 body,html{
-  font-family: openSans;
+  font-family: openSans !important;
   min-height: 100vh;
   
+}
+
+*{
+   margin:calc() !important;
+}
+:root{
+  font-size: 16px;
 }
 body{
   background: linear-gradient(
@@ -41,7 +48,6 @@ body{
     rgba(0,0,0, 0)
   ), url(@/assets/car.jpg);
   
-
 
   background-position: 70% 50%;
 

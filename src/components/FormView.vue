@@ -15,10 +15,36 @@
           name="mashak-toran"
             label="שם המשק תורן"
           ></v-text-field>
-        <VueTimepicker/>
+          <q-input filled dark v-model="starterTime"   placeholder="הכנס שעת יציאה"  :rules="['time']">
+        <template v-slot:append>
+          <q-icon name="access_time" class="cursor-pointer">
+            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+             <q-time name="starting-time"  dark v-model="starterTime" format24h >
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="סגור" color="primary" flat />
+                </div>
+              </q-time>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+              <q-input filled dark v-model="finishedTime"  placeholder="הכנס שעת הגעה" :rules="['time']">
+        <template v-slot:append>
+          <q-icon name="access_time" class="cursor-pointer">
+            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+             <q-time name="starting-time"  dark v-model="finishedTime" format24h >
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="סגור" color="primary" flat />
+                </div>
+              </q-time>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+      
 </div>
     </div>
-    <button type="submit"  @click.prevent="handleSubmit" v-ripple> סיים דוח </button></form>
+    <button class="finish-report-button" type="submit"  @click.prevent="handleSubmit" v-ripple> סיים דוח </button></form>
   
   </div>
 
@@ -26,12 +52,12 @@
 
 <script>
 import moment from "moment"
-import VueTimepicker from 'vue3-timepicker/src/VueTimepicker.vue'
 export default {
 
   data(){
     return{
-      picker:new Date().toISOString().substr(0, 10),
+      starterTime:'',
+      finishedTime:'',
       inputsObject:'',
       whatsappDomain:"whatsapp://send?",
       queryStringInputs:"",
@@ -43,7 +69,6 @@ export default {
     }
   },
   components:{
-    VueTimepicker
   },
 
   methods:{
@@ -77,6 +102,9 @@ export default {
 </script>
 
 <style scoped >
+.direction-wrapper{
+  direction: ltr !important;
+}
 .form-subtitle{
   
   font-size: 1.4rem;
@@ -101,7 +129,7 @@ export default {
   margin: 0 auto;
   justify-content: flex-start;
 }
-button{
+.finish-report-button{
     margin: 0 auto;
     border-radius: 20px;
     background-color: white;
@@ -124,6 +152,8 @@ form{
 
   text-align: center;
   font-size: 3rem;
+  margin-top: 20px;
+  margin-bottom: 20px;
   color:white;
 }
 </style>
