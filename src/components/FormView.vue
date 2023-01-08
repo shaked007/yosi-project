@@ -10,14 +10,20 @@
         <v-text-field
           name="mefaked-meshaleh-mesima"
             label=' שם מפקד משלח נסיעה + מ"א'
+                                                          append-inner-icon="mdi-account"
+
           ></v-text-field>
         <v-text-field
           name="mefaked-mesima"
             label='שם מפקד המשימה + מ"א'
+                                                          append-inner-icon="mdi-account"
+
           ></v-text-field>
            <v-text-field
           name="driver"
             label='שם הנהג + מ"א'
+                                              append-inner-icon="mdi-account"
+
           ></v-text-field>
 
           <q-input filled dark v-model="starterTime" placeholder="שעת התדרוך"  :rules="['time']">
@@ -36,21 +42,27 @@
       <v-textarea
           name="nosim"
             label='נוסעים ( שם+מ"א )'
+                                  append-inner-icon="mdi-account-multiple"
+
           ></v-textarea>
            <v-textarea
           name="description"
             label='תיאור המשימה'
+                      append-inner-icon="mdi-clipboard-outline"
+
           ></v-textarea>
-           <v-text-field
-          name="car-type"
+             <v-select
+          :items="cars"
+ label='סוג הרכב + מס צ'           
           append-inner-icon="mdi-car"
-            label='סוג הרכב + מס צ'
-          ></v-text-field>
-          <v-radio-group  label="האם הנהג ישן 7 שעות לפני ביצוע המשימה?">
+
+        ></v-select>
+        
+          <v-radio-group  class="font-sizer" label="האם הנהג ישן 7 שעות לפני ביצוע המשימה?">
               <v-radio label="כן"  name="is-sleep" :value="true" ></v-radio>
               <v-radio label="לא" name="is-sleep" :value="false" ></v-radio>
 </v-radio-group >
-   <v-radio-group  label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
+   <v-radio-group class="font-sizer" label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
               <v-radio label="כן"  name="is-licensed" :value="true" ></v-radio>
               <v-radio label="לא" name="licensed" :value="false" ></v-radio>
 </v-radio-group >
@@ -65,10 +77,18 @@
           ></v-text-field>
            <v-textarea
           name="dangers"
-          append-inner-icon="mdi-info"
+          append-inner-icon="mdi-alert"
             label='פירוט גורמי סיכון בציר'
           ></v-textarea>
           <v-text-field append-inner-icon="mdi-phone"> </v-text-field>
+           <v-checkbox
+           name="is-tudrah"
+      label="הנהג עבר תדרוך נסיעה"
+    ></v-checkbox>
+          <v-checkbox
+           name="is-card"
+      label="כרטיס עבודה מלא וחתום ע״י בעלי התפקידים"
+    ></v-checkbox>
 </div>
     </div>
     <button class="finish-report-button" type="submit"  @click.prevent="handleSubmit" v-ripple> סיים דוח </button></form>
@@ -85,6 +105,7 @@ export default {
     return{
       starterTime:'',
       finishedTime:'',
+      cars:['קנגו - צ׳265465','קנגו- צ׳265445','סוואנה - צ׳297616','טיוטה - צ׳197807','קולורדו - 187099','קולורדו - 187088','אופל - צ׳153847'],
       inputsObject:'',
       whatsappDomain:"whatsapp://send?",
       queryStringInputs:"",
@@ -128,7 +149,10 @@ export default {
 }
 </script>
 
-<style scoped >
+<style >
+.font-sizer label{
+  font-size:0.9rem !important;
+}
 .direction-wrapper{
   direction: ltr !important;
 }
