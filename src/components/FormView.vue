@@ -8,14 +8,19 @@
       <div class="flex-inputs" > 
         <h6 class="form-subtitle"> מילוי פרטים </h6>
         <v-text-field
-          name="driber"
-            label="שם הנהג"
+          name="mefaked-meshaleh-mesima"
+            label=' שם מפקד משלח נסיעה + מ"א'
           ></v-text-field>
         <v-text-field
-          name="mashak-toran"
-            label="שם המשק תורן"
+          name="mefaked-mesima"
+            label='שם מפקד המשימה + מ"א'
           ></v-text-field>
-          <q-input filled dark v-model="starterTime"   placeholder="הכנס שעת יציאה"  :rules="['time']">
+           <v-text-field
+          name="driver"
+            label='שם הנהג + מ"א'
+          ></v-text-field>
+
+          <q-input filled dark v-model="starterTime" placeholder="שעת התדרוך"  :rules="['time']">
         <template v-slot:append>
           <q-icon name="access_time" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -28,20 +33,42 @@
           </q-icon>
         </template>
       </q-input>
-              <q-input filled dark v-model="finishedTime"  placeholder="הכנס שעת הגעה" :rules="['time']">
-        <template v-slot:append>
-          <q-icon name="access_time" class="cursor-pointer">
-            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-             <q-time name="starting-time"  dark v-model="finishedTime" format24h >
-                <div class="row items-center justify-end">
-                  <q-btn v-close-popup label="סגור" color="primary" flat />
-                </div>
-              </q-time>
-            </q-popup-proxy>
-          </q-icon>
-        </template>
-      </q-input>
-      
+      <v-textarea
+          name="nosim"
+            label='נוסעים ( שם+מ"א )'
+          ></v-textarea>
+           <v-textarea
+          name="description"
+            label='תיאור המשימה'
+          ></v-textarea>
+           <v-text-field
+          name="car-type"
+          append-inner-icon="mdi-car"
+            label='סוג הרכב + מס צ'
+          ></v-text-field>
+          <v-radio-group  label="האם הנהג ישן 7 שעות לפני ביצוע המשימה?">
+              <v-radio label="כן"  name="is-sleep" :value="true" ></v-radio>
+              <v-radio label="לא" name="is-sleep" :value="false" ></v-radio>
+</v-radio-group >
+   <v-radio-group  label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
+              <v-radio label="כן"  name="is-licensed" :value="true" ></v-radio>
+              <v-radio label="לא" name="licensed" :value="false" ></v-radio>
+</v-radio-group >
+ <v-radio-group  label="האם הנהג נסע בציר זה בעבר?">
+              <v-radio label="כן"  name="is-drove-before" :value="true" ></v-radio>
+              <v-radio label="לא" name="is-drove-before" :value="false" ></v-radio>
+</v-radio-group >
+  <v-text-field
+          name="desination"
+            label='יעד הנסיעה'
+            append-inner-icon="mdi-map-marker"
+          ></v-text-field>
+           <v-textarea
+          name="dangers"
+          append-inner-icon="mdi-info"
+            label='פירוט גורמי סיכון בציר'
+          ></v-textarea>
+          <v-text-field append-inner-icon="mdi-phone"> </v-text-field>
 </div>
     </div>
     <button class="finish-report-button" type="submit"  @click.prevent="handleSubmit" v-ripple> סיים דוח </button></form>
@@ -124,7 +151,7 @@ export default {
   display: flex;
   flex-direction: column;
   color: white !important;
-  width: 80%;
+  width: 90%;
   gap: 10px 10px;
   margin: 0 auto;
   justify-content: flex-start;
