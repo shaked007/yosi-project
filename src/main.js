@@ -8,5 +8,5 @@ import quasarUserOptions from './quasar-user-options'
 loadFonts()
 
 createApp(App).use(Quasar, quasarUserOptions)
-  .use(vuetify)
+  .use(vuetify,{rtl:true})
   .mount('#app')

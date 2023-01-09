@@ -1,5 +1,9 @@
 <template>
+<v-app>
+
 <HelloWorld/>
+</v-app>
+
 </template>
 
 <script>
@@ -8,7 +12,11 @@ import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
-
+ methods: {
+      changeRTL () {
+        this.$vuetify.rtl = true
+      },
+    },
   components: {
     HelloWorld,
   },
@@ -41,12 +49,20 @@ body,html{
 :root{
   font-size: 16px;
 }
-body{
+.v-application{
+    background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.9),
+    rgba(0,0,0, 0)
+  ), url(@/assets/car.jpg) !important;
+
+}
+#app{
   background: linear-gradient(
     to bottom,
     rgba(0, 0, 0, 0.9),
     rgba(0,0,0, 0)
-  ), url(@/assets/car.jpg);
+  ), url(@/assets/car.jpg) !important;
   
 
   background-position: 70% 50%;

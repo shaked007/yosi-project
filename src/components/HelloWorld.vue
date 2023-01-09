@@ -1,6 +1,6 @@
 <template>
 <FormView  v-if="isFormView" />
-<ReportView :urlParams="urlParams" v-if="isReportView"/>
+<ReportView :urlParams="urlParams" v-if="isReportView" />
 </template>
 
 <script>
@@ -34,9 +34,12 @@ export default {
     
   },
     beforeMount(){
+      // this.$vuetify.rtl =true
+      console.log(this.$vuetify.rtl)
       this.checkViewToRender()
     },
     components:{
+     
       FormView
       ,ReportView
     }

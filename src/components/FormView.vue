@@ -1,5 +1,5 @@
 <template>
- 
+ <Nav/>
  <h4 class="main-title"> דוח נסיעה</h4>
  <h6 class="current-date"> {{currentDate}} </h6>
  <div class="flex-and-submit-container">
@@ -80,7 +80,7 @@
           append-inner-icon="mdi-alert"
             label='פירוט גורמי סיכון בציר'
           ></v-textarea>
-          <v-text-field append-inner-icon="mdi-phone"> </v-text-field>
+          <v-text-field  type="number" append-inner-icon="mdi-phone"> </v-text-field>
            <v-checkbox
            name="is-tudrah"
       label="הנהג עבר תדרוך נסיעה"
@@ -99,6 +99,8 @@
 
 <script>
 import moment from "moment"
+import Nav from "./Nav"
+
 export default {
 
   data(){
@@ -117,6 +119,7 @@ export default {
     }
   },
   components:{
+     Nav
   },
 
   methods:{
@@ -140,7 +143,6 @@ export default {
          this.message =`  לחץ על הלינק לצפייה בדוח  ${this.generatedLink} שפורסם בתאריך ${this.currentDate}   `
          this.finalLink = this.whatsappDomain +`text=${encodeURIComponent(this.message)}`
          window.open(this.finalLink)
-         console.log(this.finalLink)
 
       }
 
@@ -149,7 +151,12 @@ export default {
 }
 </script>
 
-<style >
+<style  scoped>
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+-webkit-appearance: none;
+margin: 0;
+}
 .font-sizer label{
   font-size:0.9rem !important;
 }
@@ -176,6 +183,7 @@ export default {
   flex-direction: column;
   color: white !important;
   width: 90%;
+  padding-top: 10px;
   gap: 10px 10px;
   margin: 0 auto;
   justify-content: flex-start;
