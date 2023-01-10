@@ -1,5 +1,5 @@
 <template>
- <Nav/>
+ <!-- <Nav/> -->
  <h4 class="main-title"> דוח נסיעה</h4>
  <h6 class="current-date"> {{currentDate}} </h6>
  <div class="flex-and-submit-container">
@@ -99,7 +99,7 @@
 
 <script>
 import moment from "moment"
-import Nav from "./Nav"
+// import Nav from "./Nav"
 
 export default {
 
@@ -119,7 +119,7 @@ export default {
     }
   },
   components:{
-     Nav
+    //  Nav
   },
 
   methods:{

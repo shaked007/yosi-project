@@ -1,14 +1,12 @@
 <template>
 <v-app>
-
-<HelloWorld/>
+<router-view/>
 </v-app>
 
 </template>
 
 <script>
 
-import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
@@ -18,7 +16,7 @@ export default {
       },
     },
   components: {
-    HelloWorld,
+   
   },
 
 }
