@@ -7,7 +7,7 @@
 import FormView from "./FormView"
 import ReportView from "./ReportView"
 export default {
-  name: 'HelloWorld',
+  name: 'MainPage',
   data(){
     return{
       isFormView:false,
