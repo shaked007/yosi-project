@@ -10,6 +10,10 @@
 
 export default {
   name: 'App',
+  mounted(){
+    sessionStorage.setItem('isAuthenticated',JSON.stringify(false))
+
+  },
  methods: {
       changeRTL () {
         this.$vuetify.rtl = true
@@ -24,6 +28,15 @@ export default {
 
 
 <style >
+.v-window__controls {
+ 
+    align-items: flex-start !important;
+
+}
+.v-btn--variant-elevated {
+    background:  transparent !important;
+    color: white !important;
+}
  .v-text-field input   {
   color: white;
 }
@@ -53,6 +66,11 @@ body,html{
     rgba(0, 0, 0, 0.9),
     rgba(0,0,0, 0)
   ), url(@/assets/car.jpg) !important;
+  
+  background-position: 50% 50% !important;
+
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
 
 }
 #app{

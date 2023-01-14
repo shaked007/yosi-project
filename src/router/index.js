@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ChooseReport from  '../views/ChooseReport.vue'
 import FormView from '../views/FormView.vue'
+import ReportView from "../views/ReportView.vue"
 const routes = [
   {
     path: '/',
@@ -14,9 +15,13 @@ const routes = [
     component: FormView
   },
   {
-    path: '/choose-report',
-    name: 'choose-report',
+    path: '/reports',
+    name: 'reports',
     component: ChooseReport
+  }, {
+    path: '/reports/:id',
+    name: ':id',
+    component: ReportView
   },
   
 

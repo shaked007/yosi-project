@@ -6,14 +6,14 @@
 <ReportView :urlParams="urlParams" v-if="isReportView" /> -->
 <div class="links-flex">
   <router-link v-ripple  class="report" to="fill-report">למילוי דוח</router-link>
-  <router-link class="history" to="choose-report"> להיסטוריית דוחות</router-link>
+  <router-link class="history" to="reports"> להיסטוריית דוחות</router-link>
    </div>
 <img :src="require('../assets/383zameret.png')"> 
 </template>
 
 <script>
-// import FormView from "@/components/FormView"
-import ReportView from "@/components/ReportView"
+
+
 export default {
   name: 'homeView',
   data(){
@@ -48,7 +48,7 @@ export default {
     },
     components:{
      
-      ReportView
+      
     }
   
 }

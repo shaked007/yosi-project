@@ -1,30 +1,85 @@
 <template>
 <h4 class="main-title"> דוח נסיעה</h4>
  <h6 class="sub-title"> היסטוריית דוחות</h6>
-<div class="password-container">
+<div class="password-container" v-if="!isAuthenticated">
   <v-text-field  type="password" :error="isError" @input="checkIfZeroLength" :placeholder=" isError  ?'סיסמא לא נכונה' :'הכנס סיסמא'" v-model="passValue"> </v-text-field>
   <button class="check-password-button" @click="checkPassword"> בדוק סיסמא</button>
   </div>
+  <div class="carousel-container" v-if="isAuthenticated && isFinished">  
+     
+        <v-carousel height="80vh" light hide-delimiters v-model="slide">
+            <v-carousel-item  :value="car" v-for="car in cars" :key="car">
+               <h3 class="cars"> {{car}} </h3>
+                <table> 
+                    <thead>
+                        <tr>
+                              <th> דוח</th>
+                            <th> מפקד משימה</th>
+                            <th> תאריך </th>
+                        </tr>
+                    </thead>
+                    <tbody> 
+                        <tr v-for="drive in drivesSortedObject[car]" :key="drive">
+                            <td> <router-link :name="drive.id" :to="'/reports/'+drive.id"> לצפייה בדוח </router-link></td>
+                            <td>{{drive['mefaked-meshaleh-mesima']}} </td>
+                            <td>{{drive.date}} </td>
+                                
+                             </tr>
+                    </tbody>
+                                    </table>
+            </v-carousel-item>
+        </v-carousel>
+    </div>
 </template>
 
 <script>
+import axios from "axios"
+import moment from "moment"
 export default {
     data(){
         return{
+                 drivesData:[],
+                 url:"http://localhost:3000/reports",
             isError:false,
+            slide:'קנגו - צ`265465',
+            cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
+            isAuthenticated:false,
             placeholder:"הכנס סיסמא",
             passValue:"",
+            isFinished:false
         }
     },
     methods:{
+      async  getDrivesData(){
+            const drivesResponse = await axios.get(this.url);
+            this.drivesData = drivesResponse.data
+            this.drivesSortedObject ={};
+            this.drivesData.forEach((drive)=>{
+                drive.date = moment(new Date(drive.date),'L', 'he').format("יום dddd  D/M/y")
+                if(this.drivesSortedObject.hasOwnProperty(drive.car)){
+                     this.drivesSortedObject[drive.car].push(drive)
+                }else{
+                     this.drivesSortedObject[drive.car] = []
+                    this.drivesSortedObject[drive.car].push(drive)
+
+                }
+         
+            })
+            console.log( this.drivesSortedObject)
+            this.isFinished = true
+
+        },
         checkIfZeroLength(){
           
                 this.isError = false
             
         },
-        checkPassword(){
+         checkPassword(){
             if(this.passValue == 'Aa123456'){
-
+                this.isAuthenticated = true;
+                sessionStorage.setItem('isAuthenticated',JSON.stringify(true))
+                this.getDrivesData()
+                
             }else{
                 this.isError = true
             }
@@ -35,6 +90,41 @@ export default {
 </script>
 
 <style scoped>
+table th, table td{ /* Added padding for better layout after collapsing */
+    padding: 4px 8px;
+}
+table{
+    width:80%;
+        border-collapse: collapse;
+    table-layout: fixed;
+    text-align: center;
+    margin: 0 auto;
+    color: white;
+}
+table thead tr th{
+    font-size: 1.2rem;
+    border-bottom: 1px solid white;
+}
+table tbody tr td{
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.747);
+}
+.carousel-container{
+    height: 80vh;
+}
+.v-btn--variant-elevated {
+    background:  transparent !important;
+    color: white !important;
+}
+.cars{
+    text-align: center;
+       font-size: 1.3rem;
+        color: white;
+}
+.btn-class{
+    flex-wrap: wrap;
+    font-size: 0.8rem;
+}
 .password-container{
     color: white;
     text-align: center;
