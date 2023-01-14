@@ -20,7 +20,7 @@
                     </thead>
                     <tbody> 
                         <tr v-for="drive in drivesSortedObject[car]" :key="drive">
-                            <td> <router-link :name="drive.id" :to="'/reports/'+drive.id"> לצפייה בדוח </router-link></td>
+                            <td> <router-link class="link-to-report" :name="drive.id" :to="'/reports/'+drive.id"> לצפייה בדוח </router-link></td>
                             <td>{{drive['mefaked-meshaleh-mesima']}} </td>
                             <td>{{drive.date}} </td>
                                 
@@ -90,6 +90,14 @@ export default {
 </script>
 
 <style scoped>
+.link-to-report{
+    display: inline-block;
+    padding: 4px 10px;
+    background-color: rgba(0, 0, 0, 0.753);
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+}
 table th, table td{ /* Added padding for better layout after collapsing */
     padding: 4px 8px;
 }
