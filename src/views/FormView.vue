@@ -115,6 +115,8 @@
 <script>
 import moment from "moment"
 // import Nav from "./Nav"
+import axios from "axios"
+
 
 export default {
 
@@ -134,7 +136,7 @@ export default {
       ],
       finalLink:"",
       message:"",
-      currentUrl:"http://localhost:3000/reports",
+      currentUrl:"/.netlify/functions/post_report",
       currentDate:  moment(new Date(),'L', 'he').format("יום dddd  D/M/y")
     }
   },
@@ -149,9 +151,17 @@ mounted(){
     checkAllInputs(){
         return true;
     },
-    handleSubmit(event){
-      // event.preventDefault()
-      window.location.href="/";
+     async handleSubmit(event){
+      event.preventDefault()
+      const form = this.$refs["report-form"];
+      const data = Object.fromEntries(new FormData(form).entries());
+      console.log(data)
+      const response = await axios.post(this.currentUrl,JSON.stringify(data))
+      if(response.status== 200){
+          this.$swal({icon:'success',text:'הדו"ח הועלה בהצלחה'})
+          window.location.href="/";
+
+      }
 
       // if(this.checkAllInputs()){
       //     const form = this.$refs["report-form"]

@@ -79,7 +79,7 @@
               <v-radio label="כן"    value="true" ></v-radio>
               <v-radio label="לא"  value="false" ></v-radio>
 </v-radio-group >
-   <v-radio-group  readonly required class="font-sizer" v-model="report['is-licensed']"  label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
+   <v-radio-group  readonly required class="font-sizer" v-model="report['licensed']"  label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
     
               <v-radio label="כן"  value="true" ></v-radio>
               <v-radio label="לא" value="false" ></v-radio>
@@ -102,7 +102,7 @@
           :value="report['dangers']"
           append-inner-icon="mdi-alert"
           ></v-textarea>
-          <v-text-field  required  dark  readonly  autocomplete="off"   type="number" append-inner-icon="mdi-phone"> </v-text-field>
+          <v-text-field  required       :value="report['phone']" dark  readonly  autocomplete="off"   type="number" append-inner-icon="mdi-phone"> </v-text-field>
            <v-checkbox required 
            v-model="check"
            dark
@@ -132,6 +132,7 @@ export default {
   name:"ReportView",
   data(){
     return{
+    currentDate:'',
       check:true,
       isAuthenticated:false,
       report:[],
@@ -139,8 +140,10 @@ export default {
       {name:'mefaked-mesima',hebrewName:"מפקד המשימה"},
        {name:'driver',hebrewName:"נהג"}
       ],
-    
-      url:"http://localhost:3000/reports/" + window.location.href.split('/')[window.location.href.split('/').length-1]
+
+          url:"/.netlify/functions/fetch_chosen?id=" + window.location.href.split('/')[window.location.href.split('/').length-1],
+
+      // url:"http://localhost:3000/reports/" + window.location.href.split('/')[window.location.href.split('/').length-1]
     }
   },
   beforeMount(){
@@ -156,7 +159,8 @@ export default {
 
        async getReportById(){
         const reportResponse = await axios.get(this.url);
-        this.report = reportResponse.data;
+        this.report = reportResponse.data[0];
+         this.currentDate = moment(new Date( this.report['date']),'L', 'he').format("יום dddd  D/M/y")
         console.log(this.report)
         this.report.date = moment(new Date(this.report.date),'L', 'he').format("יום dddd  D/M/y");
            this.isAuthenticated = true;

@@ -5,6 +5,7 @@
   <v-text-field  type="password" :error="isError" @input="checkIfZeroLength" :placeholder=" isError  ?'סיסמא לא נכונה' :'הכנס סיסמא'" v-model="passValue"> </v-text-field>
   <button class="check-password-button" @click="checkPassword"> בדוק סיסמא</button>
   </div>
+
   <div class="carousel-container" v-if="isAuthenticated && isFinished">  
      
         <v-carousel height="80vh" light hide-delimiters v-model="slide">
@@ -20,7 +21,7 @@
                     </thead>
                     <tbody> 
                         <tr v-for="drive in drivesSortedObject[car]" :key="drive">
-                            <td> <router-link class="link-to-report" :name="drive.id" :to="'/reports/'+drive.id"> לצפייה בדוח </router-link></td>
+                            <td> <router-link class="link-to-report" :name="drive.id" :to="'/reports/'+drive['_id']"> לצפייה בדוח </router-link></td>
                             <td>{{drive['mefaked-meshaleh-mesima']}} </td>
                             <td>{{drive.date}} </td>
                                 
@@ -40,6 +41,8 @@ export default {
         return{
                  drivesData:[],
                  url:"http://localhost:3000/reports",
+                                  url:"/.netlify/functions/fetch_all",
+
             isError:false,
             slide:'קנגו - צ`265465',
             cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
@@ -52,6 +55,7 @@ export default {
     methods:{
       async  getDrivesData(){
             const drivesResponse = await axios.get(this.url);
+            console.log(drivesResponse)
             this.drivesData = drivesResponse.data
             this.drivesSortedObject ={};
             this.drivesData.forEach((drive)=>{
