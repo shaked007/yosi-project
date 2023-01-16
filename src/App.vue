@@ -11,7 +11,7 @@
 export default {
   name: 'App',
   mounted(){
-    console.log(process.env.VUE_APP_URI,process.env.VUE_APP_COLLECTION,process.env.VUE_APP_DATABASE)
+    console.log(process.env.VUE_APP_uri,process.env.VUE_APP_collection,process.env.VUE_db)
     sessionStorage.setItem('isAuthenticated',JSON.stringify(false))
 
   },

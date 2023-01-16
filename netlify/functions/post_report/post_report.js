@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 
-const mongoClient = new MongoClient(process.env.VUE_APP_uri);
+const mongoClient = new MongoClient('mongodb+srv://shakedbuk:AqWTlymx9DT7ESrD@cluster0.ffork.mongodb.net/?retryWrites=true&w=majority');
 
 const clientPromise = mongoClient.connect();
 
@@ -8,8 +8,8 @@ const handler = async (event) => {
     try {
       
      
-        const database = (await clientPromise).db(process.env.VUE_APP_db);
-        const collection = database.collection(process.env.VUE_APP_collection);
+        const database = (await clientPromise).db('cluster0');
+        const collection = database.collection('drives');
         console.log(event.body)
         const results = await collection.insertOne(
           JSON.parse(event.body)
