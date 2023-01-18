@@ -1,6 +1,17 @@
 <template>
 <h3 class="no-permissions-header" v-if="!isAuthenticated"> אין לך הרשאות לעמוד זה </h3>
-<div v-if="isAuthenticated">
+
+ <div class="spinner-class">
+
+    <v-progress-circular v-if="!isFinished && spinnerStarter"
+      indeterminate
+      color="white"
+      size="90"
+    ></v-progress-circular>
+    </div>
+
+
+<div v-if="isAuthenticated  && isFinished">
 
  <h4 class="main-title">טופס שילוח משימה</h4>
 
@@ -53,7 +64,7 @@
                                 <h6  > נוסעים </h6>
 
  <div class="names-container" v-for="(nosea,index) in Object.keys(drivesObject)" :key="nosea">
-          <span class="person--job-title"> {{index+1}} נוסע</span>
+          <span class="person--job-title"> נוסע {{index+1}} </span>
           
             <v-text-field
             dark
@@ -132,6 +143,31 @@
           ></v-text-field>
 </div>
 <div>
+  <h6>עצירות בדרך </h6>
+    <h6 v-if="!Object.keys(stopsObject).length">לא נרשמו עצירות בדרך בנסיעה זו</h6>
+
+ <div class="names-container" v-for="(stop,index) in Object.keys(stopsObject)" :key="stop">
+          <span class="person--job-title">  עצירה {{index+1}}</span>
+          
+            <v-text-field
+            dark
+            autocomplete="off"
+          class="disabled"
+      :persistent-placeholder="stopsObject[stop]['name']"
+            
+            
+            :value="stopsObject[stop]['name']"
+              required                     
+
+          ></v-text-field>
+         
+           </div>
+
+
+
+
+</div>
+<div>
   <h6> סכנות בדרך</h6>
            <v-textarea required 
            readonly
@@ -140,10 +176,39 @@
           append-inner-icon="mdi-alert"
           ></v-textarea>
 </div>
-<div> 
-    <h6> אנשי קשר חיוניים</h6>
 
-          <v-text-field  required       :value="report['phone']" dark  readonly  autocomplete="off"   type="number" append-inner-icon="mdi-phone"> </v-text-field>
+<div>
+                                <h6  > אנשי קשר חיוניים </h6>
+
+ <div class="names-container" v-for="(phone,index) in Object.keys(contactsObject)" :key="phone">
+          <span class="person--job-title">  טלפון {{index+1}}</span>
+          
+            <v-text-field
+            dark
+            autocomplete="off"
+          class="disabled"
+      :persistent-placeholder="contactsObject[phone]['name']"
+            
+            
+            :value="contactsObject[phone]['name']"
+              required                     
+
+          ></v-text-field>
+             <v-text-field
+                autocomplete="off"
+                   class="disabled"
+                   
+                dark
+       readonly
+             :persistent-placeholder="contactsObject[phone]['num']"
+
+            :value="contactsObject[phone]['num']"
+                            required                             
+
+          ></v-text-field>
+           </div>
+      </div>
+
            <v-checkbox required 
            v-model="check"
            dark
@@ -151,7 +216,6 @@
       label="הנהג עבר תדרוך נסיעה"
       
     ></v-checkbox>
-</div>
      <div class="label-alignment"> 
           <v-checkbox required 
           readonly
@@ -177,10 +241,14 @@ export default {
   name:"ReportView",
   data(){
     return{
+      spinnerStarter:false,
     currentDate:'',
+    isFinished:false,
       check:true,
-      isAuthenticated:false,
+      isAuthenticated:true,
       drivesObject:{},
+      contactsObject:{},
+      stopsObject:{},
       report:[],
        jobs:[{hebrewName:'מפקד משלח משימה',name:"mefaked-meshaleh-mesima"},
       {name:'mefaked-mesima',hebrewName:"מפקד המשימה"},
@@ -204,6 +272,7 @@ export default {
   methods:{
 
        async getReportById(){
+        this.spinnerStarter = true;
         const reportResponse = await axios.get(this.url);
         this.report = reportResponse.data[0];
          this.currentDate = moment(new Date( this.report['date']),'L', 'he').format("יום dddd  D/M/y")
@@ -227,11 +296,54 @@ export default {
                 }
               }
             }
+  if(item.includes('contact')){
+              if(this.contactsObject[item.split('contact')[1][0]]){
+                if(item.includes('num')){
+                        this.contactsObject[item.split('contact')[1][0]]['num'] =this.report[item]
+                }else{
+                this.contactsObject[item.split('contact')[1][0]]['name'] = this.report[item]
+
+                }
+              }else{
+                        this.contactsObject[item.split('contact')[1][0]] = {}
+                             if(item.includes('num')){
+                        this.contactsObject[item.split('contact')[1][0]]['num'] =this.report[item]
+                }else{
+                this.contactsObject[item.split('contact')[1][0]]['name'] = this.report[item]
+
+                }
+              }
+            }
+ if(item.includes('stop')){
+              if(this.stopsObject[item.split('stop')[1][0]]){
+                if(item.includes('num')){
+                        this.stopsObject[item.split('stop')[1][0]]['num'] =this.report[item]
+                }else{
+                this.stopsObject[item.split('stop')[1][0]]['name'] = this.report[item]
+                }
+              }else{
+                        this.stopsObject[item.split('stop')[1][0]] = {}
+                             if(item.includes('num')){
+                        this.stopsObject[item.split('stop')[1][0]]['num'] =this.report[item]
+                }else{
+                this.stopsObject[item.split('stop')[1][0]]['name'] = this.report[item]
+
+                }
+              }
+            }
+
+
+
+
+
+
+
         })
         console.log( this.drivesObject)
         console.log(this.report)
         this.report.date = moment(new Date(this.report.date),'L', 'he').format("יום dddd  D/M/y");
            this.isAuthenticated = true;
+           this.isFinished = true
         
       }
   }
@@ -239,6 +351,14 @@ export default {
 </script>
 
 <style scoped>
+.spinner-class{
+display: flex;
+position: relative;
+top: 30%;
+align-items: center;
+justify-content: center;
+  
+}
 h6{
   margin-bottom: 10px !important;
 }

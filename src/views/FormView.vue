@@ -53,20 +53,8 @@
       </q-input>
 <div > 
   <div class="nosim-container">
-  <v-btn @click="handlePlus"
-        class="ma-2"
-        color="dark"
-        dark
-      >
-        <v-icon
-          dark
-          right
-        >
-          mdi-plus-thick
-        </v-icon>
-      </v-btn>
-                              <span  class="nosim-title"> נוסעים ({{nosim}})</span>
-                                <v-btn
+
+                                <v-btn 
                                 @click="handleMinus"
         class="ma-2"
         color="dark"
@@ -77,6 +65,21 @@
           right
         >
           mdi-minus-thick
+        </v-icon>
+      </v-btn>
+
+
+                              <span  class="nosim-title"> נוסעים ({{nosim}})</span>
+        <v-btn @click="handlePlus"
+        class="ma-2"
+        color="dark"
+        dark
+      >
+        <v-icon
+          dark
+          right
+        >
+          mdi-plus-thick
         </v-icon>
       </v-btn>
 
@@ -143,7 +146,123 @@
           append-inner-icon="mdi-alert"
             label='פירוט גורמי סיכון בציר'
           ></v-textarea>
-          <v-text-field  required   name="phone"   autocomplete="off"  label="אנשי קשר חיוניים"  append-inner-icon="mdi-phone"> </v-text-field>
+          <div>
+  <div class="nosim-container">
+
+                                <v-btn
+                                @click="handleMinusStops"
+        class="ma-2"
+        color="dark"
+        dark
+      
+      
+      >
+
+        <v-icon
+          dark
+          right
+        >
+          mdi-minus-thick
+        </v-icon>
+      </v-btn>
+                                  <span  class="nosim-title">  עצירות</span><span class="nosim-title" v-if="stops"> ({{stops}})</span>  
+                                    
+
+  <v-btn @click="handlePlusStops"
+        class="ma-2"
+        color="dark"
+        dark
+      >
+
+        <v-icon
+          dark
+          right
+        >
+          mdi-plus-thick
+        </v-icon>
+      </v-btn>
+</div>
+<span  class="nosim-title"  v-if="!stops">  לא נרשמו עצירות </span>
+  <div v-for="index in stops" :key="index">
+          <span class="person--job-title">עצירה {{index}}</span>
+          
+            <v-text-field
+            dark
+            autocomplete="off"
+          :name="'stop' + index"
+            label='עצירה'
+              required                     
+
+          ></v-text-field>
+            
+           </div>
+          </div>
+
+
+
+
+
+
+
+<div > 
+  <div class="nosim-container">
+
+                                <v-btn 
+                                @click="handleMinusPhones"
+        class="ma-2"
+        color="dark"
+        dark
+      >
+        <v-icon
+          dark
+          right
+        >
+          mdi-minus-thick
+        </v-icon>
+      </v-btn>
+
+
+                              <span  class="nosim-title"> אנשים קשר חיוניים ({{phones}})</span>
+        <v-btn @click="handlePlusPhones"
+        class="ma-2"
+        color="dark"
+        dark
+      >
+        <v-icon
+          dark
+          right
+        >
+          mdi-plus-thick
+        </v-icon>
+      </v-btn>
+
+</div>
+  <div v-for="index in phones" :key="index">
+          <span class="person--job-title">איש קשר  {{index}}</span>
+          
+            <v-text-field
+            dark
+            autocomplete="off"
+          :name="'contact' + index "
+            label='שם מלא'
+              required                     
+
+          ></v-text-field>
+             <v-text-field
+                autocomplete="off"
+                type="number"
+          :name="'contact' +index +'-num'"
+            label='טלפון'
+                            required                             
+
+          ></v-text-field>
+           </div>
+      </div> 
+
+
+
+
+
            <v-checkbox required 
            name="is-tudrah"
            
@@ -175,6 +294,8 @@ export default {
 
   data(){
     return{
+      phones:1,
+      stops:0,
       nosim:1,
       starterTime:'',
       finishedTime:'',
@@ -200,6 +321,35 @@ mounted(){
   
 },
   methods:{
+  handleMinusPhones(){
+        if(this.phones >1){
+          this.phones--
+        }
+    
+    },
+  handlePlusPhones(){
+    if(this.phones <5){
+              this.phones++
+            }
+      },
+
+
+
+
+
+    handleMinusStops(){
+        if(this.stops >0){
+          this.stops--
+        }
+    
+    },
+  handlePlusStops(){
+    if(this.stops <5){
+              this.stops++
+            }
+      },
+
+
     handleMinus(){
   if(this.nosim >1){
           this.nosim--

@@ -4,8 +4,16 @@
 <div class="password-container" v-if="!isAuthenticated">
   <v-text-field  type="password" :error="isError" @input="checkIfZeroLength" :placeholder=" isError  ?'סיסמא לא נכונה' :'הכנס סיסמא'" v-model="passValue"> </v-text-field>
   <button class="check-password-button" @click="checkPassword"> בדוק סיסמא</button>
+ 
   </div>
+    <div class="text-center">
 
+    <v-progress-circular v-if="!isFinished && spinnerStarter"
+      indeterminate
+      color="white"
+      size="60"
+    ></v-progress-circular>
+    </div>
   <div class="carousel-container" v-if="isAuthenticated && isFinished">  
      
         <v-carousel height="80vh" light hide-delimiters v-model="slide">
@@ -15,14 +23,14 @@
                     <thead>
                         <tr>
                               <th> דוח</th>
-                            <th> מפקד משימה</th>
+                            <th>נהג</th>
                             <th> תאריך </th>
                         </tr>
                     </thead>
                     <tbody> 
                         <tr v-for="drive in drivesSortedObject[car]" :key="drive">
                             <td> <router-link class="link-to-report" :name="drive.id" :to="'/reports/'+drive['_id']"> לצפייה בדוח </router-link></td>
-                            <td>{{drive['mefaked-meshaleh-mesima']}} </td>
+                            <td>{{drive['driver']}} </td>
                             <td>{{drive.date}} </td>
                                 
                              </tr>
@@ -39,6 +47,7 @@ import moment from "moment"
 export default {
     data(){
         return{
+            spinnerStarter: false,
                  drivesData:[],
                  url:"http://localhost:3000/reports",
                                   url:"/.netlify/functions/fetch_all",
@@ -54,6 +63,8 @@ export default {
     },
     methods:{
       async  getDrivesData(){
+                    this.spinnerStarter = true;
+
             const drivesResponse = await axios.get(this.url);
             console.log(drivesResponse)
             this.drivesData = drivesResponse.data
