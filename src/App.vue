@@ -11,7 +11,7 @@
 export default {
   name: 'App',
   mounted(){
-    console.log(process.env.VUE_APP_uri,process.env.VUE_APP_collection,process.env.VUE_db)
+
     sessionStorage.setItem('isAuthenticated',JSON.stringify(false))
 
   },
@@ -87,7 +87,15 @@ body,html{
   background-size: cover;
   background-repeat: no-repeat;
 }
-     @media (max-width: 480px) {
+    @media (max-width: 391px) {
         
+.label-alignment .v-selection-control{
+    align-items: flex-start !important;
+
+}
+
         }
+        .v-label{
+  text-align: right !important;
+}
 </style>

@@ -6,12 +6,12 @@ const clientPromise = mongoClient.connect();
 
 const handler = async (event) => {
     try {
-        const API_PARAM = event.queryStringParameters;
+        const apiParams= event.queryStringParameters;
         const finalObject = {};
-        finalObject['_id'] = API_PARAM.id
+        finalObject['_id'] = apiParams.id
         const database = (await clientPromise).db('cluster0');
         const collection = database.collection('drives');
-        const results = await collection.find({'_id':ObjectId(API_PARAM.id)}).toArray();
+        const results = await collection.find({'_id':ObjectId(apiParams.id)}).toArray();
         console.log(finalObject)
         console.log(results)
         return {

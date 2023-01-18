@@ -2,21 +2,23 @@
 <h3 class="no-permissions-header" v-if="!isAuthenticated"> אין לך הרשאות לעמוד זה </h3>
 <div v-if="isAuthenticated">
 
- <h4 class="main-title"> דוח נסיעה</h4>
- <h6 class="current-date"> {{currentDate}} </h6>
+ <h4 class="main-title">טופס שילוח משימה</h4>
+
  <div class="flex-and-submit-container">
+ <h6 class="current-date"> {{report['date']}} </h6>
 
     <input type="hidden" name="date" :value="report['date']" />
     <div class="grey-zone-container">
       <div class="flex-inputs" > 
-        <h6 class="form-subtitle"> מילוי פרטים </h6>
+                <div>
+
+          <h6 > בעלי תפקידים</h6>
         <div class="names-container" v-for="job in jobs" :key="job.name">
           <span class="person--job-title"> {{job.hebrewName}}</span>
           
             <v-text-field
             dark
             autocomplete="off"
-          :name="job.name"
           class="disabled"
       :persistent-placeholder="report[job.name]"
             
@@ -37,7 +39,7 @@
 
           ></v-text-field>
            </div>
-      
+      </div>
    
 
           <q-input filled dark  readonly required   :value="report['tidruh-time']" name="tidruh-time" :placeholder="report['tidruh-time']"  >
@@ -47,15 +49,40 @@
           </q-icon>
         </template>
       </q-input>
-      <v-textarea
-      required
-        autocomplete="off"
-          name="nosim"
-          :value="report['nosim']"
-         dark
-                                  append-inner-icon="mdi-account-multiple"
+<div>
+                                <h6  > נוסעים </h6>
 
-          ></v-textarea>
+ <div class="names-container" v-for="(nosea,index) in Object.keys(drivesObject)" :key="nosea">
+          <span class="person--job-title"> {{index+1}} נוסע</span>
+          
+            <v-text-field
+            dark
+            autocomplete="off"
+          class="disabled"
+      :persistent-placeholder="drivesObject[nosea]['name']"
+            
+            
+            :value="drivesObject[nosea]['name']"
+              required                     
+
+          ></v-text-field>
+             <v-text-field
+                autocomplete="off"
+                   class="disabled"
+                dark
+       readonly
+             :persistent-placeholder="drivesObject[nosea]['num']"
+
+            :value="drivesObject[nosea]['num']"
+                            required                             
+
+          ></v-text-field>
+           </div>
+      </div>
+
+    <div> 
+                <h6 > תיאור המשימה</h6>
+
            <v-textarea
            required
                autocomplete="off"
@@ -65,6 +92,11 @@
                       append-inner-icon="mdi-clipboard-outline"
 
           ></v-textarea>
+    </div>
+
+<div>
+                  <h6 > רכב</h6>
+
              <v-select
              required
              readonly
@@ -74,7 +106,7 @@
           append-inner-icon="mdi-car"
 
         ></v-select>
-        
+    </div>
           <v-radio-group   readonly required v-model="report['is-sleep']" class="font-sizer" label="האם הנהג ישן 7 שעות לפני ביצוע המשימה?">
               <v-radio label="כן"    value="true" ></v-radio>
               <v-radio label="לא"  value="false" ></v-radio>
@@ -88,6 +120,8 @@
               <v-radio label="כן"  name="is-drove-before" value="true" ></v-radio>
               <v-radio label="לא" name="is-drove-before" value="false" ></v-radio>
 </v-radio-group >
+<div> 
+  <h6>יעד הנסיעה </h6>
   <v-text-field required 
          
           :value="report['destination']"
@@ -96,19 +130,29 @@
           dark 
             append-inner-icon="mdi-map-marker"
           ></v-text-field>
+</div>
+<div>
+  <h6> סכנות בדרך</h6>
            <v-textarea required 
            readonly
            dark
           :value="report['dangers']"
           append-inner-icon="mdi-alert"
           ></v-textarea>
+</div>
+<div> 
+    <h6> אנשי קשר חיוניים</h6>
+
           <v-text-field  required       :value="report['phone']" dark  readonly  autocomplete="off"   type="number" append-inner-icon="mdi-phone"> </v-text-field>
            <v-checkbox required 
            v-model="check"
            dark
            readonly
       label="הנהג עבר תדרוך נסיעה"
+      
     ></v-checkbox>
+</div>
+     <div class="label-alignment"> 
           <v-checkbox required 
           readonly
           dark 
@@ -117,6 +161,7 @@
           
       label="כרטיס עבודה מלא וחתום ע״י בעלי התפקידים"
     ></v-checkbox>
+     </div>
 </div>
     </div>
    
@@ -135,6 +180,7 @@ export default {
     currentDate:'',
       check:true,
       isAuthenticated:false,
+      drivesObject:{},
       report:[],
        jobs:[{hebrewName:'מפקד משלח משימה',name:"mefaked-meshaleh-mesima"},
       {name:'mefaked-mesima',hebrewName:"מפקד המשימה"},
@@ -161,6 +207,28 @@ export default {
         const reportResponse = await axios.get(this.url);
         this.report = reportResponse.data[0];
          this.currentDate = moment(new Date( this.report['date']),'L', 'he').format("יום dddd  D/M/y")
+         
+        Object.keys(this.report).forEach((item)=>{
+            if(item.includes('nosea')){
+              if(this.drivesObject[item.split('nosea')[1][0]]){
+                if(item.includes('num')){
+                        this.drivesObject[item.split('nosea')[1][0]]['num'] =this.report[item]
+                }else{
+                this.drivesObject[item.split('nosea')[1][0]]['name'] = this.report[item]
+
+                }
+              }else{
+                        this.drivesObject[item.split('nosea')[1][0]] = {}
+                             if(item.includes('num')){
+                        this.drivesObject[item.split('nosea')[1][0]]['num'] =this.report[item]
+                }else{
+                this.drivesObject[item.split('nosea')[1][0]]['name'] = this.report[item]
+
+                }
+              }
+            }
+        })
+        console.log( this.drivesObject)
         console.log(this.report)
         this.report.date = moment(new Date(this.report.date),'L', 'he').format("יום dddd  D/M/y");
            this.isAuthenticated = true;
@@ -171,6 +239,21 @@ export default {
 </script>
 
 <style scoped>
+h6{
+  margin-bottom: 10px !important;
+}
+.nosim-title{
+  color: white;
+  font-size: 1.25rem;
+}
+
+
+.person--job-title{
+  display: inline-block;
+  color: rgba(255, 255, 255, 0.829);
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
 .input-group__input *{
   color: rgba(255, 255, 255, 0.87) !important;
   }
@@ -185,13 +268,6 @@ export default {
 }
 .main-title{
   color:white;
-}
-.person--job-title{
-  display: inline-block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 10px;
-  font-size: 1.2rem;
 }
 
 input::-webkit-outer-spin-button,
@@ -222,6 +298,7 @@ margin: 0;
 }
 .flex-inputs{
   display: flex;
+  text-align: center;
   flex-direction: column;
   color: white !important;
   width: 95%;

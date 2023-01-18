@@ -12,6 +12,7 @@
     "@quasar/extras": "^1.0.0",
     "axios": "^1.2.2",
     "bootstrap": "^5.2.3",
+    "bootstrap-icons": "^1.10.3",
     "core-js": "^3.8.3",
     "moment": "^2.29.4",
     "mongodb": "^4.13.0",

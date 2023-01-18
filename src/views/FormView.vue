@@ -2,15 +2,20 @@
  <!-- <Nav/> -->
  <!-- <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe> -->
 
- <h4 class="main-title"> דוח נסיעה</h4>
+ <h4 class="main-title">טופס שילוח משימה</h4>
  <h6 class="current-date"> {{currentDate}} </h6>
  <div class="flex-and-submit-container">
   <form ref="report-form" method="POST"   @submit="handleSubmit($event)" :action="currentUrl" >
     <input type="hidden" name="date" :value="new Date()" />
     <div class="grey-zone-container">
       <div class="flex-inputs" > 
-        <h6 class="form-subtitle"> מילוי פרטים </h6>
+        <!-- <h6 class="form-subtitle"> מילוי פרטים </h6> -->
+        <div>
+                            <h6 > בעלי תפקידים</h6>
+
         <div v-for="job in jobs" :key="job.name">
+                    <br>
+
           <span class="person--job-title"> {{job.hebrewName}}</span>
           
             <v-text-field
@@ -29,7 +34,8 @@
 
           ></v-text-field>
            </div>
-      
+              </div>
+
    
 
           <q-input filled dark v-model="starterTime" readonly required  name="tidruh-time" placeholder=" שעת התדרוך  (לחץ על השעון)"  :rules="['time']">
@@ -45,14 +51,57 @@
           </q-icon>
         </template>
       </q-input>
-      <v-textarea
-      required
-        autocomplete="off"
-          name="nosim"
-            label='נוסעים ( שם+מ"א )'
-                                  append-inner-icon="mdi-account-multiple"
+<div > 
+  <div class="nosim-container">
+  <v-btn @click="handlePlus"
+        class="ma-2"
+        color="dark"
+        dark
+      >
+        <v-icon
+          dark
+          right
+        >
+          mdi-plus-thick
+        </v-icon>
+      </v-btn>
+                              <span  class="nosim-title"> נוסעים ({{nosim}})</span>
+                                <v-btn
+                                @click="handleMinus"
+        class="ma-2"
+        color="dark"
+        dark
+      >
+        <v-icon
+          dark
+          right
+        >
+          mdi-minus-thick
+        </v-icon>
+      </v-btn>
 
-          ></v-textarea>
+</div>
+  <div v-for="index in nosim" :key="index">
+          <span class="person--job-title">נוסע {{index}}</span>
+          
+            <v-text-field
+            dark
+            autocomplete="off"
+          :name="'nosea' + index "
+            label='שם מלא'
+              required                     
+
+          ></v-text-field>
+             <v-text-field
+                autocomplete="off"
+          :name="'nosea' +index +'-num'"
+            label='מספר אישי'
+                            required                             
+
+          ></v-text-field>
+           </div>
+      </div> 
+      
            <v-textarea
            required
                autocomplete="off"
@@ -94,16 +143,20 @@
           append-inner-icon="mdi-alert"
             label='פירוט גורמי סיכון בציר'
           ></v-textarea>
-          <v-text-field  required   name="phone"   autocomplete="off"  label="אנשי קשר חיוניים" type="number" append-inner-icon="mdi-phone"> </v-text-field>
+          <v-text-field  required   name="phone"   autocomplete="off"  label="אנשי קשר חיוניים"  append-inner-icon="mdi-phone"> </v-text-field>
            <v-checkbox required 
            name="is-tudrah"
            
       label="הנהג עבר תדרוך נסיעה"
-    ></v-checkbox>
+    >
+
+    </v-checkbox>
+        <div class="label-alignment"> 
           <v-checkbox required 
            name="is-card"
       label="כרטיס עבודה מלא וחתום ע״י בעלי התפקידים"
     ></v-checkbox>
+      </div>
 </div>
     </div>
     <input class="finish-report-button"  type="submit"   value="סיים דוח" v-ripple></form>
@@ -122,7 +175,7 @@ export default {
 
   data(){
     return{
- 
+      nosim:1,
       starterTime:'',
       finishedTime:'',
       cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
@@ -147,7 +200,16 @@ mounted(){
   
 },
   methods:{
-    
+    handleMinus(){
+  if(this.nosim >1){
+          this.nosim--
+        }
+    },
+    handlePlus(){
+        if(this.nosim <5){
+          this.nosim++
+        }
+    },
     checkAllInputs(){
         return true;
     },
@@ -189,10 +251,32 @@ mounted(){
 </script>
 
 <style  scoped>
+.nosim-container button{
+  background-color: white;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  color: black;
+  padding: 0.5em 1em;
+}
+.nosim-container{
+  display: flex;
+  align-items: center;
+  /* flex-direction: column; */
+  justify-content: center;
+}
+.nosim-title{
+  color: white;
+  font-size: 1.25rem;
+}
+.v-label{
+  text-align: right !important;
+}
+
 .person--job-title{
   display: inline-block;
+  color: rgba(255, 255, 255, 0.829);
   margin-bottom: 10px;
-  font-size: 1.2rem;
+  font-size: 1rem;
 }
 
 input::-webkit-outer-spin-button,
