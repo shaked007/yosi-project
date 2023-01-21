@@ -29,6 +29,28 @@ export default {
 
 
 <style >
+.q-field--filled .q-field__control:after{
+    height: 0px !important;
+}
+.q-date__range-from:before {
+    left: 0% !important;
+        border-radius: 50% 0% 0%  50% !important
+
+}
+.q-date__range-to:before {
+    right: 0% !important;
+    border-radius: 0% 50% 50%  0% !important
+}
+.q-date__header{
+  direction: rtl;
+
+}
+.q-date__navigation {
+  direction: rtl;
+}
+.v-overlay{
+  direction:rtl !important;
+}
 .v-window__controls {
  
     align-items: flex-start !important;

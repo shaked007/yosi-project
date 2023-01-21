@@ -37,8 +37,8 @@
               </div>
 
    
-
-          <q-input filled dark v-model="starterTime" readonly required  name="tidruh-time" placeholder=" שעת התדרוך  (לחץ על השעון)"  :rules="['time']">
+        <div id="date"> 
+          <q-input filled dark v-model="starterTime" readonly   ref="timeRef" name="tidruh-time" placeholder=" שעת התדרוך  (לחץ על השעון)"  :rules="['timeOrFulltime']">
         <template v-slot:append>
           <q-icon name="access_time" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -51,6 +51,8 @@
           </q-icon>
         </template>
       </q-input>
+                  </div>
+
 <div > 
   <div class="nosim-container">
 
@@ -113,28 +115,34 @@
                       append-inner-icon="mdi-clipboard-outline"
 
           ></v-textarea>
+          <div id="car">
              <v-select
-             required
+                 required
+                 ref="select"
+                 v-model="carValue"
+            :rules="[(v) => !!v || 'יש לבחור רכב']"
           :items="cars"
  label='סוג הרכב + מס צ'          
  name="car" 
           append-inner-icon="mdi-car"
 
         ></v-select>
-        
-          <v-radio-group  required  class="font-sizer" label="האם הנהג ישן 7 שעות לפני ביצוע המשימה?">
+                  </div>
+<div id="radios"> 
+          <v-radio-group  mandatory ref="radio1"  v-model="radio1" class="font-sizer" label="האם הנהג ישן 7 שעות לפני ביצוע המשימה?">
               <v-radio label="כן"   name="is-sleep" :value="true" ></v-radio>
               <v-radio label="לא" name="is-sleep" :value="false" ></v-radio>
 </v-radio-group >
-   <v-radio-group  required class="font-sizer" label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
+   <v-radio-group  mandatory  v-model="radio2" ref="radio2" class="font-sizer" label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
     
               <v-radio label="כן"  name="is-licensed" :value="true" ></v-radio>
               <v-radio label="לא" name="licensed" :value="false" ></v-radio>
 </v-radio-group >
- <v-radio-group   required label="האם הנהג נסע בציר זה בעבר?">
+ <v-radio-group   mandatory v-model="radio3"  ref="radio3" label="האם הנהג נסע בציר זה בעבר?">
               <v-radio label="כן"  name="is-drove-before" :value="true" ></v-radio>
               <v-radio label="לא" name="is-drove-before" :value="false" ></v-radio>
 </v-radio-group >
+</div>
   <v-text-field required 
           name="destination"
              autocomplete="off"
@@ -165,7 +173,7 @@
           mdi-minus-thick
         </v-icon>
       </v-btn>
-                                  <span  class="nosim-title">  עצירות</span><span class="nosim-title" v-if="stops"> ({{stops}})</span>  
+                                  <span  class="nosim-title">  יעדי עצירה</span><span class="nosim-title" v-if="stops"> ({{stops}})</span>  
                                     
 
   <v-btn @click="handlePlusStops"
@@ -182,7 +190,7 @@
         </v-icon>
       </v-btn>
 </div>
-<span  class="nosim-title"  v-if="!stops">  לא נרשמו עצירות </span>
+<span  class="nosim-title"  v-if="!stops">  לא נרשמו יעדי עצירה בנסיעה זו</span>
   <div v-for="index in stops" :key="index">
           <span class="person--job-title">עצירה {{index}}</span>
           
@@ -222,7 +230,7 @@
       </v-btn>
 
 
-                              <span  class="nosim-title"> אנשים קשר חיוניים ({{phones}})</span>
+                              <span  class="nosim-title"> אנשי קשר חיוניים ({{phones}})</span>
         <v-btn @click="handlePlusPhones"
         class="ma-2"
         color="dark"
@@ -278,6 +286,11 @@
       </div>
 </div>
     </div>
+    <div class="phone-container">
+    <h6 > גדוד 383 - משרד קצין רכב </h6>
+   <h6> <a href="tel:054-993-6883"> 0549936883</a> - יוסי שושן</h6>
+    </div>
+    <br>
     <input class="finish-report-button"  type="submit"   value="סיים דוח" v-ripple></form>
   
   </div>
@@ -294,10 +307,18 @@ export default {
 
   data(){
     return{
+      radio1:'',
+      radio2:'',
+      radio3:'',
       phones:1,
       stops:0,
-      nosim:1,
+      carValue:'',
       starterTime:'',
+      rules:{
+    select: [v =>  v.length >0 || "יש לבחור רכב"],
+      },
+      nosim:1,
+
       finishedTime:'',
       cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
       inputsObject:'',
@@ -364,7 +385,23 @@ mounted(){
         return true;
     },
      async handleSubmit(event){
+      let isTimeValid;
+      let isCarValid;
+      let isRadio1;
+      let isRadio2;
+      let isRadio3;
+
+      try{
+      isTimeValid = await this.$refs.timeRef.validate()
+       isCarValid = await this.$refs.select.validate()
+
+     console.log(isTimeValid,isCarValid,this.starterTime,this.radio1,this.radio2,this.radio3)
+      }
+      catch(err){
+        console.log(err.message)
+      }
       event.preventDefault()
+      if (isTimeValid  && this.carValue  && this.radio1!==''  && this.radio2!=='' && this.radio3!==''){
       const form = this.$refs["report-form"];
       const data = Object.fromEntries(new FormData(form).entries());
       console.log(data)
@@ -375,23 +412,30 @@ mounted(){
 
       }
 
-      // if(this.checkAllInputs()){
-      //     const form = this.$refs["report-form"]
-      //     this.inputsObject = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {})
-      //     Object.keys(this.inputsObject).forEach((inputName)=>{
-      //       if(inputName && this.inputsObject[inputName]){
-      //           this.queryStringInputs += inputName + "=" + encodeURIComponent(this.inputsObject[inputName])
-      //       }
-      //     })
-      //    this.generatedLink = this.currentUrl+ (this.queryStringInputs)
-      //   //  this.message += `${this.currentDate} דוח חדש פורסם בתאריך      
-      //   //  `
-      //   //  this.message+= `  לחץ על הלינק לצפייה בדוח  ${this.generatedLink}`
-      //    this.message =`  לחץ על הלינק לצפייה בדוח  ${this.generatedLink} שפורסם בתאריך ${this.currentDate}   `
-      //    this.finalLink = this.whatsappDomain +`text=${encodeURIComponent(this.message)}`
-      //    window.open(this.finalLink)
+      if(this.checkAllInputs()){
+          const form = this.$refs["report-form"]
+          this.inputsObject = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {})
+          Object.keys(this.inputsObject).forEach((inputName)=>{
+            if(inputName && this.inputsObject[inputName]){
+                this.queryStringInputs += inputName + "=" + encodeURIComponent(this.inputsObject[inputName])
+            }
+          })
+         this.generatedLink = this.currentUrl+ (this.queryStringInputs)
+        //  this.message += `${this.currentDate} דוח חדש פורסם בתאריך      
+        //  `
+        //  this.message+= `  לחץ על הלינק לצפייה בדוח  ${this.generatedLink}`
+         this.message =`  לחץ על הלינק לצפייה בדוח  ${this.generatedLink} שפורסם בתאריך ${this.currentDate}   `
+         this.finalLink = this.whatsappDomain +`text=${encodeURIComponent(this.message)}`
+         window.open(this.finalLink)
 
-      // }
+      }
+      }else if(!isTimeValid){
+         document.getElementById("date").scrollIntoView();
+
+      }else if(!this.carValue){
+             document.getElementById("car").scrollIntoView();
+      }else if(this.radio1 === '' || this.radio2=== '' || this.radio3==='')
+                   document.getElementById("radios").scrollIntoView();
 
 
     }
@@ -401,6 +445,13 @@ mounted(){
 </script>
 
 <style  scoped>
+
+.phone-container a{
+  color: white;
+}
+.phone-container{
+  color: white;
+}
 .nosim-container button{
   background-color: white;
   border-radius: 20px;

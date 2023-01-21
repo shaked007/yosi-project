@@ -143,8 +143,8 @@
           ></v-text-field>
 </div>
 <div>
-  <h6>עצירות בדרך </h6>
-    <h6 v-if="!Object.keys(stopsObject).length">לא נרשמו עצירות בדרך בנסיעה זו</h6>
+  <h6> יעדי עצירה</h6>
+    <h6 v-if="!Object.keys(stopsObject).length">לא נרשמו יעדי עצירה בנסיעה זו</h6>
 
  <div class="names-container" v-for="(stop,index) in Object.keys(stopsObject)" :key="stop">
           <span class="person--job-title">  עצירה {{index+1}}</span>
@@ -230,7 +230,11 @@
     </div>
    
   </div>
-
+ <div class="phone-container">
+    <h6 > גדוד 383 - משרד קצין רכב </h6>
+   <h6> <a href="tel:054-993-6883"> 0549936883</a> - יוסי שושן</h6>
+    </div>
+    <br>
   </div>
 </template>
 
@@ -351,6 +355,13 @@ export default {
 </script>
 
 <style scoped>
+.phone-container a{
+  color: white;
+}
+.phone-container{
+  text-align: center;
+  color: white;
+}
 .spinner-class{
 display: flex;
 position: relative;

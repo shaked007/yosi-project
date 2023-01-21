@@ -15,10 +15,43 @@
     ></v-progress-circular>
     </div>
   <div class="carousel-container" v-if="isAuthenticated && isFinished">  
-     
+
         <v-carousel height="80vh" light hide-delimiters v-model="slide">
-            <v-carousel-item  :value="car" v-for="car in cars" :key="car">
-               <h3 class="cars"> {{car}} </h3>
+            <v-carousel-item  :value="car.carName" v-for="car in cars" :key="car">
+               <h3 class="cars"> {{car.carName}} </h3>
+               <div class="filter-btn">
+                            <button class="revert-filter-btn" v-if="!isFiltering" @click="isFiltering=true"> סנן</button>
+</div>
+               <div class="filters-container" v-if="isFiltering">
+                   <q-input filled dark    hide-bottom-space no-error-icon  :error="false" :model-value="!car.dateModel.from? 'כל התאריכים':`${`${car.dateModel.to.split('/')[2]}/${car.dateModel.to.split('/')[1]}/${car.dateModel.to.split('/')[0]}`} - ${`${car.dateModel.from.split('/')[2]}/${car.dateModel.from.split('/')[1]}/${car.dateModel.from.split('/')[0]}`}` " readonly   ref="timeRef" name="tidruh-time" placeholder="בחר תאריכים"  :rules="['timeOrFulltime']">
+        <template v-slot:append>
+          <q-icon name="access_time" class="cursor-pointer">
+            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                              <q-date @range-end="handleRange" v-model="car.dateModel" range   >
+
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="סגור" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-icon>
+        </template>
+      </q-input>
+      <div class="drivers-select-container"> 
+           <q-select
+          @update:model-value="handleDriver"
+     
+                 class="bg-class"
+                 ref="select" filled dark
+                 v-model="car.driverModel"
+                
+          :options="drivers"
+ name="car" 
+
+        />
+        </div>
+        <button class="revert-filter-btn" @click="revertFilter(car)"> בטל סינון</button>
+      </div>
                 <table> 
                     <thead>
                         <tr>
@@ -28,7 +61,7 @@
                         </tr>
                     </thead>
                     <tbody> 
-                        <tr v-for="drive in drivesSortedObject[car]" :key="drive">
+                        <tr v-for="drive in drivesSortedObject[car.carName]" :key="drive">
                             <td> <router-link class="link-to-report" :name="drive.id" :to="'/reports/'+drive['_id']"> לצפייה בדוח </router-link></td>
                             <td>{{drive['driver']}} </td>
                             <td>{{drive.date}} </td>
@@ -42,11 +75,18 @@
 </template>
 
 <script>
+import hebrew from "@/assets/hebrew"
 import axios from "axios"
 import moment from "moment"
 export default {
     data(){
         return{
+            drivers:["אולג","כל הנהגים"],
+            startingDate:"",
+            endingDate:"",
+            isFiltering:false,
+            driverFilter:"",
+            backupReports:[],
             spinnerStarter: false,
                  drivesData:[],
                  url:"http://localhost:3000/reports",
@@ -54,14 +94,66 @@ export default {
 
             isError:false,
             slide:'קנגו - צ`265465',
-            cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
+            cars:[{carName:'קנגו - צ`265465',driverModel:"כל הנהגים",dateModel:{from:"",to:""}}
+            ,{carName:'קנגו- צ`265445',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {carName:'סוואנה - צ`297616',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {carName:'טיוטה - צ`197807',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {carName:'קולורדו - צ`187099',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {carName:'קולורדו - צ`187088',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {carName:'אופל - צ`153847',driverModel:"כל הנהגים",dateModel:{from:"",to:""}}],
+            // cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
             isAuthenticated:false,
             placeholder:"הכנס סיסמא",
             passValue:"",
             isFinished:false
         }
     },
+    beforeMount(){
+        if(sessionStorage.getItem('isAuthenticated') =='true'){
+            this.isAuthenticated = true
+            this.getDrivesData()
+        }else{
+            this.isAuthenticated = false
+        }
+    },
     methods:{
+        handleDriver(val){
+            if(val != 'כל הנהגים'){
+             this.drivesSortedObject[this.slide] =   this.drivesSortedObject[this.slide].filter((car)=>{
+              
+                return  val==car.driver
+            })}
+        },
+        
+        revertFilter(car){
+            this.cars.forEach((carObject)=>{
+                console.log(carObject.carName,car.carName)
+                if (carObject.carName == car.carName){
+                    carObject.driverModel = "כל הנהגים";
+                    carObject.dateModel = {from:"",to:""};
+                    
+                    this.drivesSortedObject[car.carName] = [...this.backupReports[car.carName]]
+                    this.isFiltering = false
+                }
+            })
+        
+        },
+    dateCheck(from,to,check) {
+    console.log(from)
+    console.log(to)
+    console.log(check)
+    var fDate,lDate,cDate;
+    fDate = Date.parse(from);
+    lDate = Date.parse(to);
+    cDate = Date.parse(check);
+
+    if((cDate <= lDate && cDate >= fDate)) {
+        return true;
+    }
+    return false;
+},
+
+
       async  getDrivesData(){
                     this.spinnerStarter = true;
 
@@ -81,6 +173,7 @@ export default {
          
             })
             console.log( this.drivesSortedObject)
+            this.backupReports = {...this.drivesSortedObject}
             this.isFinished = true
 
         },
@@ -88,6 +181,26 @@ export default {
           
                 this.isError = false
             
+        },
+      
+        handleRange(object){
+            
+          this.startingDate =  new Date(`${object.from['month']}/${object.from['day']}/${object.from['year']}`)
+          this.endingDate =  new Date(`${object.to['month']}/${object.to['day']}/${object.to['year']}`)
+            const backupTo = object.to['year'];
+            const backupFrom = object.from['year'];
+            object.to['year'] = object.to['day'];
+            object.to['day'] = backupTo
+          object.from['year'] = object.from['day'];
+            object.from['day'] = backupFrom
+            console.log(object)
+            
+            this.drivesSortedObject[this.slide] =   this.drivesSortedObject[this.slide].filter((car)=>{
+                let stru = car.date.split(' ')[ car.date.split(' ').length-1]
+                stru =  new Date(`${stru.split('/')[1]}/${stru.split('/')[0]}/${stru.split('/')[2]}`)
+                return this.dateCheck(this.startingDate,this.endingDate,stru)
+            })
+        
         },
          checkPassword(){
             if(this.passValue == 'Aa123456'){
@@ -105,6 +218,40 @@ export default {
 </script>
 
 <style scoped>
+.filter-btn{
+    text-align: center;
+    font-size: 1.2rem;
+    
+}
+.revert-filter-btn{
+       display: inline-block;
+    padding: 0.5em 1em;
+    background-color: rgba(0, 0, 0, 0.753);
+    color: white;
+    text-decoration: none;
+    border-radius: 20px;
+}
+.bg-class{
+    background: rgb(255,255,255,0.0.7);
+    color: white;
+}
+.drivers-select-container{
+    /* direction: rtl; */
+}
+.q-date__range-to{
+    border-radius: 50%;
+}
+.q-field--filled .q-field__control:after{
+    height: 0px !important;
+}
+
+
+.filters-container{
+    text-align: center;
+    direction: rtl;
+    width: 80%;
+    margin:0 auto;
+}
 .link-to-report{
     display: inline-block;
     padding: 4px 10px;
@@ -117,18 +264,39 @@ table th, table td{ /* Added padding for better layout after collapsing */
     padding: 4px 8px;
 }
 table{
-    width:80%;
+    width:310px;
         border-collapse: collapse;
     table-layout: fixed;
     text-align: center;
     margin: 0 auto;
     color: white;
 }
+table thead{
+    width: 310px;
+}
+table tbody{
+    display: block;
+    width: 310px;
+    overflow: auto;
+    height: 450px;
+}
+table tbody tr{
+    width: 310px;
+}
+table thead tr{
+        width:310px;
+
+    text-align: right;
+    display:block;
+}
 table thead tr th{
+    width: 103px;
+    text-align: center;
     font-size: 1.2rem;
     border-bottom: 1px solid white;
 }
 table tbody tr td{
+    width: 103px;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.747);
 }
