@@ -231,9 +231,9 @@ export default {
     text-decoration: none;
     border-radius: 20px;
 }
-.bg-class{
-    background: rgb(255,255,255,0.0.7);
-    color: white;
+.bg-class {
+    background: rgb(255,255,255,0.07)  !important;
+    color: #fff;
 }
 .drivers-select-container{
     /* direction: rtl; */
