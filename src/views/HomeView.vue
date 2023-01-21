@@ -1,6 +1,6 @@
 <template>
 
-<h4 class="main-title"> דוח נסיעה</h4>
+<h4 class="main-title"> טופס שילוח משימה</h4>
  <h6 class="sub-title"> מסך הבית </h6>
 <!-- <FormView  v-if="isFormView" />
 <ReportView :urlParams="urlParams" v-if="isReportView" /> -->
