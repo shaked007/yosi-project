@@ -29,6 +29,19 @@ export default {
 
 
 <style >
+
+
+@media print{
+  input{
+    color: black !important;
+  }
+  .q-field--dark .q-field__input, .q-field--dark .q-field__native, .q-field--dark .q-field__prefix, .q-field--dark .q-field__suffix {
+    color: black !important;
+}
+  *{
+    color:black !important;
+  }
+}
 .q-field--filled .q-field__control:after{
     height: 0px !important;
 }

@@ -52,6 +52,8 @@
            </div>
       </div>
    
+<div>
+    <h6> שעת תדרוך</h6>
 
           <q-input filled dark  readonly required   :value="report['tidruh-time']" name="tidruh-time" :placeholder="report['tidruh-time']"  >
         <template v-slot:append>
@@ -60,6 +62,7 @@
           </q-icon>
         </template>
       </q-input>
+      </div>
 <div>
                                 <h6  > נוסעים </h6>
 
@@ -354,7 +357,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped> 
+
 .phone-container a{
   color: white;
 }
