@@ -412,23 +412,23 @@ mounted(){
 
       }
 
-      if(this.checkAllInputs()){
-          const form = this.$refs["report-form"]
-          this.inputsObject = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {})
-          Object.keys(this.inputsObject).forEach((inputName)=>{
-            if(inputName && this.inputsObject[inputName]){
-                this.queryStringInputs += inputName + "=" + encodeURIComponent(this.inputsObject[inputName])
-            }
-          })
-         this.generatedLink = this.currentUrl+ (this.queryStringInputs)
-        //  this.message += `${this.currentDate} דוח חדש פורסם בתאריך      
-        //  `
-        //  this.message+= `  לחץ על הלינק לצפייה בדוח  ${this.generatedLink}`
-         this.message =`  לחץ על הלינק לצפייה בדוח  ${this.generatedLink} שפורסם בתאריך ${this.currentDate}   `
-         this.finalLink = this.whatsappDomain +`text=${encodeURIComponent(this.message)}`
-         window.open(this.finalLink)
+      // if(this.checkAllInputs()){
+      //     const form = this.$refs["report-form"]
+      //     this.inputsObject = Object.values(form).reduce((obj,field) => { obj[field.name] = field.value; return obj }, {})
+      //     Object.keys(this.inputsObject).forEach((inputName)=>{
+      //       if(inputName && this.inputsObject[inputName]){
+      //           this.queryStringInputs += inputName + "=" + encodeURIComponent(this.inputsObject[inputName])
+      //       }
+      //     })
+      //    this.generatedLink = this.currentUrl+ (this.queryStringInputs)
+      //   //  this.message += `${this.currentDate} דוח חדש פורסם בתאריך      
+      //   //  `
+      //   //  this.message+= `  לחץ על הלינק לצפייה בדוח  ${this.generatedLink}`
+      //    this.message =`  לחץ על הלינק לצפייה בדוח  ${this.generatedLink} שפורסם בתאריך ${this.currentDate}   `
+      //    this.finalLink = this.whatsappDomain +`text=${encodeURIComponent(this.message)}`
+      //    window.open(this.finalLink)
 
-      }
+      // }
       }else if(!isTimeValid){
          document.getElementById("date").scrollIntoView();
 
