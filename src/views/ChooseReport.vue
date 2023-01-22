@@ -144,7 +144,7 @@ export default {
             // this.cars[key]['key'] = keyBackup
             // key[key] = key[key] +1;
             // key[key] = key[key] -1
-           this.$router.push('/reports')
+           this.$router.push('/')
             this.$forceUpdate()
             this.$emit('',car)
          }
