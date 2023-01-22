@@ -17,9 +17,11 @@
   <div class="carousel-container" v-if="isAuthenticated && isFinished">  
 
         <v-carousel height="80vh" light hide-delimiters v-model="slide">
-            <v-carousel-item  :value="car.carName" v-for="car in cars" :key="car">
+            <v-carousel-item  :value="car.carName" v-for="car in cars" :key="car.key">
                <h3 class="cars"> {{car.carName}} </h3>
                <div class="filter-btn">
+                        <button class="revert-filter-btn"  @click="revertFilter(car)"> רענן <v-icon> mdi-refresh-circle</v-icon> </button>
+
                             <button class="revert-filter-btn" v-if="!isFiltering" @click="isFiltering=true"> סנן</button>
 </div>
                <div class="filters-container" v-if="isFiltering">
@@ -50,22 +52,27 @@
 
         />
         </div>
-        <button class="revert-filter-btn" @click="revertFilter(car)"> בטל סינון</button>
+        <button class="revert-filter-btn"  @click="revertFilter(car)"> בטל סינון</button>
+        
       </div>
                 <table> 
                     <thead>
                         <tr>
+                                   <th >מחיקה </th>
                               <th> דוח</th>
                             <th>נהג</th>
                             <th> תאריך </th>
+                                                     
+
                         </tr>
                     </thead>
                     <tbody> 
-                        <tr v-for="drive in drivesSortedObject[car.carName]" :key="drive">
-                            <td> <router-link class="link-to-report" :name="drive.id" :to="'/reports/'+drive['_id']"> לצפייה בדוח </router-link></td>
+                        <tr v-for="(drive,index) in drivesSortedObject[car.carName]" :key="drive['_id']">
+                                                            <td ><button class="link-to-report" @click="deleteRecord(drive,index,drivesSortedObject[car.carName],car)"> מחק </button></td>
+
+                            <td> <router-link class="link-to-report" :name="drive.id" :to="'/reports/'+drive['_id']">לצפייה </router-link></td>
                             <td>{{drive['driver']}} </td>
                             <td>{{drive.date}} </td>
-                                
                              </tr>
                     </tbody>
                                     </table>
@@ -81,6 +88,7 @@ import moment from "moment"
 export default {
     data(){
         return{
+             currentUrl:"/.netlify/functions/delete_report",
             drivers:["אולג","כל הנהגים"],
             startingDate:"",
             endingDate:"",
@@ -94,13 +102,13 @@ export default {
 
             isError:false,
             slide:'קנגו - צ`265465',
-            cars:[{carName:'קנגו - צ`265465',driverModel:"כל הנהגים",dateModel:{from:"",to:""}}
-            ,{carName:'קנגו- צ`265445',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {carName:'סוואנה - צ`297616',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {carName:'טיוטה - צ`197807',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {carName:'קולורדו - צ`187099',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {carName:'קולורדו - צ`187088',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {carName:'אופל - צ`153847',driverModel:"כל הנהגים",dateModel:{from:"",to:""}}],
+            cars:[{key:'קנגו - צ`265465',carName:'קנגו - צ`265465',driverModel:"כל הנהגים",dateModel:{from:"",to:""}}
+            ,{key:'קנגו- צ`265445',carName:'קנגו- צ`265445',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {key:'סוואנה - צ`297616',carName:'סוואנה - צ`297616',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {key:'טיוטה - צ`197807',carName:'טיוטה - צ`197807',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {key:'קולורדו - צ`187099',carName:'קולורדו - צ`187099',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {key:'קולורדו - צ`187088',carName:'קולורדו - צ`187088',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
+            {key:'אופל - צ`153847',carName:'אופל - צ`153847',driverModel:"כל הנהגים",dateModel:{from:"",to:""}}],
             // cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
             isAuthenticated:false,
             placeholder:"הכנס סיסמא",
@@ -117,6 +125,32 @@ export default {
         }
     },
     methods:{
+       async  deleteRecord(drive,index,arr,car){
+        const swalAction = await this.$swal({icon:'warning',showCancelButton:true,showConfirmButton:true,confirmButtonText:'מחק',cancelButtonText:'חזור',title:':האם את בטוח שאתה רוצה למחוק את ',text:`דוח שבוצע בתאריך ${drive.date} ברכב ${this.slide}`,width:'300px',height:'300px'})
+        if(swalAction.isConfirmed){
+         const res  = await axios.post(this.currentUrl,JSON.stringify({'_id':drive['_id']}))
+         if (res.status == 200){
+            this.$swal({icon:'success',text:'הפריט נמחק בהצלחה'})
+            this.getDrivesData()
+            arr.splice(index,1)
+            arr= arr.filter((filterDriver)=>{
+                return drive['_id'] !== filterDriver['_id']
+            })
+            // var backup  = this.slide;
+            // this.slide = ''
+            // this.slide = backup
+            // var keyBackup =   this.cars[key]['key'] 
+            // this.cars[key]['key']  = ''
+            // this.cars[key]['key'] = keyBackup
+            // key[key] = key[key] +1;
+            // key[key] = key[key] -1
+           this.$router.push('/reports')
+            this.$forceUpdate()
+            this.$emit('',car)
+         }
+        }
+
+        },
         handleDriver(val){
             if(val != 'כל הנהגים'){
              this.drivesSortedObject[this.slide] =   this.drivesSortedObject[this.slide].filter((car)=>{
@@ -126,17 +160,22 @@ export default {
         },
         
         revertFilter(car){
+            if(car){
             this.cars.forEach((carObject)=>{
                 console.log(carObject.carName,car.carName)
                 if (carObject.carName == car.carName){
                     carObject.driverModel = "כל הנהגים";
                     carObject.dateModel = {from:"",to:""};
-                    
+                    try{
                     this.drivesSortedObject[car.carName] = [...this.backupReports[car.carName]]
-                    this.isFiltering = false
+                    }
+                    catch{}
                 }
             })
-        
+
+            }
+                                            this.isFiltering = false
+
         },
     dateCheck(from,to,check) {
     console.log(from)
@@ -219,6 +258,8 @@ export default {
 
 <style scoped>
 .filter-btn{
+    display: flex;
+    justify-content: space-evenly;
     text-align: center;
     font-size: 1.2rem;
     
@@ -254,8 +295,9 @@ export default {
 }
 .link-to-report{
     display: inline-block;
-    padding: 4px 10px;
-    background-color: rgba(0, 0, 0, 0.753);
+    font-size: 0.8rem;
+    padding: 0.5em 1em;
+    background-color: rgba(34, 41, 38, 0.63);
     color: white;
     text-decoration: none;
     border-radius: 20px;
@@ -264,7 +306,7 @@ table th, table td{ /* Added padding for better layout after collapsing */
     padding: 4px 8px;
 }
 table{
-    width:310px;
+    width:320px;
         border-collapse: collapse;
     table-layout: fixed;
     text-align: center;
@@ -272,32 +314,32 @@ table{
     color: white;
 }
 table thead{
-    width: 310px;
+    width: 320px;
 }
 table tbody{
     display: block;
-    width: 310px;
+    width: 320px;
     overflow: auto;
     height: 450px;
 }
 table tbody tr{
-    width: 310px;
+    width: 320px;
 }
 table thead tr{
-        width:310px;
+        width:320px;
 
     text-align: right;
     display:block;
 }
 table thead tr th{
-    width: 103px;
+    width: 80px;
     text-align: center;
     font-size: 1.2rem;
     border-bottom: 1px solid white;
 }
 table tbody tr td{
-    width: 103px;
-    font-size: 0.9rem;
+    width: 80px;
+    font-size: 0.8rem;
     color: rgba(255, 255, 255, 0.747);
 }
 .carousel-container{
