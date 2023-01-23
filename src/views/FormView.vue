@@ -5,7 +5,7 @@
  <h4 class="main-title">טופס שילוח משימה</h4>
  <h6 class="current-date"> {{currentDate}} </h6>
  <div class="flex-and-submit-container">
-  <form ref="report-form" method="POST"   @submit="handleSubmit($event)" :action="currentUrl" >
+  <form ref="report-form" method="POST"   @submit.once="handleSubmit($event)" :action="currentUrl" >
     <input type="hidden" name="date" :value="new Date()" />
     <div class="grey-zone-container">
       <div class="flex-inputs" > 
@@ -291,7 +291,7 @@
    <h6> <a href="tel:054-993-6883"> 0549936883</a> - יוסי שושן</h6>
     </div>
     <br>
-    <input class="finish-report-button"  type="submit"   value="סיים דוח" v-ripple></form>
+    <input class="finish-report-button" :disabled="isSubmitValid" type="submit"   value="סיים דוח" v-ripple></form>
   
   </div>
 
@@ -307,6 +307,7 @@ export default {
 
   data(){
     return{
+      isSubmitValid:false,
       radio1:'',
       radio2:'',
       radio3:'',
@@ -402,6 +403,7 @@ mounted(){
       }
       event.preventDefault()
       if (isTimeValid  && this.carValue  && this.radio1!==''  && this.radio2!=='' && this.radio3!==''){
+        this.isSubmitValid = true;
       const form = this.$refs["report-form"];
       const data = Object.fromEntries(new FormData(form).entries());
       console.log(data)
