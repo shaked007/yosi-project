@@ -125,7 +125,7 @@
               <v-radio label="כן"    value="true" ></v-radio>
               <v-radio label="לא"  value="false" ></v-radio>
 </v-radio-group >
-   <v-radio-group  readonly required class="font-sizer" v-model="report['licensed']"  label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
+   <v-radio-group  readonly required class="font-sizer" v-model="report['is-licensed']"  label="האם לנהג יש רישיון והיתר מתאים לסוג הרכב?">
     
               <v-radio label="כן"  value="true" ></v-radio>
               <v-radio label="לא" value="false" ></v-radio>
