@@ -20,12 +20,12 @@
             <v-carousel-item  :value="car.carName" v-for="car in cars" :key="car.key">
                <h3 class="cars"> {{car.carName}} </h3>
                <div class="filter-btn">
-                        <button class="revert-filter-btn"  @click="revertFilter(car)"> רענן <v-icon> mdi-refresh-circle</v-icon> </button>
+                        <!-- <button class="revert-filter-btn"  @click="revertFilter(car)"> רענן <v-icon> mdi-refresh-circle</v-icon> </button> -->
 
                             <button class="revert-filter-btn" v-if="!isFiltering" @click="isFiltering=true"> סנן</button>
 </div>
                <div class="filters-container" v-if="isFiltering">
-                   <q-input filled dark    hide-bottom-space no-error-icon  :error="false" :model-value="!car.dateModel.from? 'כל התאריכים':`${`${car.dateModel.to.split('/')[2]}/${car.dateModel.to.split('/')[1]}/${car.dateModel.to.split('/')[0]}`} - ${`${car.dateModel.from.split('/')[2]}/${car.dateModel.from.split('/')[1]}/${car.dateModel.from.split('/')[0]}`}` " readonly   ref="timeRef" name="tidruh-time" placeholder="בחר תאריכים"  :rules="['timeOrFulltime']">
+                   <q-input filled dark    hide-bottom-space no-error-icon placeholder="כל התאריכים" :error="false" :model-value="!car.dateModel.from? '':`${`${car.dateModel.to.split('/')[2]}/${car.dateModel.to.split('/')[1]}/${car.dateModel.to.split('/')[0]}`} - ${`${car.dateModel.from.split('/')[2]}/${car.dateModel.from.split('/')[1]}/${car.dateModel.from.split('/')[0]}`}` " readonly   ref="timeRef" name="tidruh-time"   :rules="['timeOrFulltime']">
         <template v-slot:append>
           <q-icon name="access_time" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
@@ -40,17 +40,7 @@
         </template>
       </q-input>
       <div class="drivers-select-container"> 
-           <q-select
-          @update:model-value="handleDriver"
-     
-                 class="bg-class"
-                 ref="select" filled dark
-                 v-model="car.driverModel"
-                
-          :options="drivers"
- name="car" 
-
-        />
+            <q-input filled dark @update:model-value="(val)=>{handleDriver(car,val)}" placeholder="סנן לפי נהג" v-model="car.driverModel" hide-bottom-space no-error-icon  :error="false" />
         </div>
         <button class="revert-filter-btn"  @click="revertFilter(car)"> בטל סינון</button>
         
@@ -102,13 +92,13 @@ export default {
 
             isError:false,
             slide:'קנגו - צ`265465',
-            cars:[{key:'קנגו - צ`265465',carName:'קנגו - צ`265465',driverModel:"כל הנהגים",dateModel:{from:"",to:""}}
-            ,{key:'קנגו- צ`265445',carName:'קנגו- צ`265445',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {key:'סוואנה - צ`297616',carName:'סוואנה - צ`297616',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {key:'טיוטה - צ`197807',carName:'טיוטה - צ`197807',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {key:'קולורדו - צ`187099',carName:'קולורדו - צ`187099',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {key:'קולורדו - צ`187088',carName:'קולורדו - צ`187088',driverModel:"כל הנהגים",dateModel:{from:"",to:""}},
-            {key:'אופל - צ`153847',carName:'אופל - צ`153847',driverModel:"כל הנהגים",dateModel:{from:"",to:""}}],
+            cars:[{key:'קנגו - צ`265465',carName:'קנגו - צ`265465',driverModel:"",dateModel:{from:"",to:""}}
+            ,{key:'קנגו- צ`265445',carName:'קנגו- צ`265445',driverModel:"",dateModel:{from:"",to:""}},
+            {key:'סוואנה - צ`297616',carName:'סוואנה - צ`297616',driverModel:"",dateModel:{from:"",to:""}},
+            {key:'טיוטה - צ`197807',carName:'טיוטה - צ`197807',driverModel:"",dateModel:{from:"",to:""}},
+            {key:'קולורדו - צ`187099',carName:'קולורדו - צ`187099',driverModel:"",dateModel:{from:"",to:""}},
+            {key:'קולורדו - צ`187088',carName:'קולורדו - צ`187088',driverModel:"",dateModel:{from:"",to:""}},
+            {key:'אופל - צ`153847',carName:'אופל - צ`153847',driverModel:"",dateModel:{from:"",to:""}}],
             // cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
             isAuthenticated:false,
             placeholder:"הכנס סיסמא",
@@ -128,8 +118,13 @@ export default {
        async  deleteRecord(drive,index,arr,car){
         const swalAction = await this.$swal({icon:'warning',showCancelButton:true,showConfirmButton:true,confirmButtonText:'מחק',cancelButtonText:'חזור',title:':האם את בטוח שאתה רוצה למחוק את ',text:`דוח שבוצע בתאריך ${drive.date} ברכב ${this.slide}`,width:'300px',height:'300px'})
         if(swalAction.isConfirmed){
+                        this.$swal({title:'מוחק פריט',text:'אנא המתן'})
+                this.$swal.showLoading()
+
          const res  = await axios.post(this.currentUrl,JSON.stringify({'_id':drive['_id']}))
          if (res.status == 200){
+                   this.$swal.hideLoading()
+
             this.$swal({icon:'success',text:'הפריט נמחק בהצלחה'})
             this.getDrivesData()
             arr.splice(index,1)
@@ -151,12 +146,17 @@ export default {
         }
 
         },
-        handleDriver(val){
-            if(val != 'כל הנהגים'){
+        handleDriver(car,val){
+            console.log(val)
+            if(val){
              this.drivesSortedObject[this.slide] =   this.drivesSortedObject[this.slide].filter((car)=>{
               
-                return  val==car.driver
-            })}
+                return  car.driver.includes(val)
+            })
+            }else{
+                console.log(car)
+                this.revertFilter(car)
+            }
         },
         
         revertFilter(car){
@@ -164,7 +164,7 @@ export default {
             this.cars.forEach((carObject)=>{
                 console.log(carObject.carName,car.carName)
                 if (carObject.carName == car.carName){
-                    carObject.driverModel = "כל הנהגים";
+                    carObject.driverModel = "";
                     carObject.dateModel = {from:"",to:""};
                     try{
                     this.drivesSortedObject[car.carName] = [...this.backupReports[car.carName]]
@@ -277,7 +277,7 @@ export default {
     color: #fff;
 }
 .drivers-select-container{
-    /* direction: rtl; */
+    direction: rtl !important;
 }
 .q-date__range-to{
     border-radius: 50%;

@@ -1,6 +1,19 @@
 <template>
  <!-- <Nav/> -->
+
  <!-- <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe> -->
+<dialog @animationend.once="$refs.anim.play()" ref="dialog">  
+    <h6> !הדוח הועלה בהצלחה</h6> 
+  <h5> !שתהיה נסיעה טובה ובטוחה </h5> 
+  <lottie-animation
+  ref="anim"
+  :animationData="require('@/assets/88044-car-safety-edit.json')"
+  :loop="false"
+  :autoPlay="false"
+  :speed="2"
+@complete="returnToMain"
+/>  </dialog>
+ 
 
  <h4 class="main-title">טופס שילוח משימה</h4>
  <h6 class="current-date"> {{currentDate}} </h6>
@@ -340,9 +353,13 @@ export default {
     //  Nav
   },
 mounted(){
-  
+  this.$swal.fire({icon:"warning",title:'ב"ם',text:'אין לפרט על משימות מסווגות ו/או לפרט שמות מתקנים מסווגים, יש לשמור על ב"מ',timer:4000})
 },
   methods:{
+    returnToMain(){
+          window.location.href="/";
+
+    },
   handleMinusPhones(){
         if(this.phones >1){
           this.phones--
@@ -382,6 +399,7 @@ mounted(){
           this.nosim++
         }
     },
+ 
     checkAllInputs(){
         return true;
     },
@@ -407,11 +425,14 @@ mounted(){
       const form = this.$refs["report-form"];
       const data = Object.fromEntries(new FormData(form).entries());
       console.log(data)
+                this.$swal({title:'מעלה דוח',text:'אנא המתן'})
+                this.$swal.showLoading()
       const response = await axios.post(this.currentUrl,JSON.stringify(data))
       if(response.status== 200){
-          this.$swal({icon:'success',text:'הדו"ח הועלה בהצלחה'})
-          window.location.href="/";
-
+       this.$swal.hideLoading()
+       this.$swal.close()
+         this.$refs.dialog.show()
+          this.$refs.dialog.classList.add("ani-class")
       }
 
       // if(this.checkAllInputs()){
@@ -447,7 +468,42 @@ mounted(){
 </script>
 
 <style  scoped>
-
+.ani-class{
+  animation: zoom 0.3s ease-in-out forwards;
+  
+}
+@keyframes zoom{
+  0%{
+    opacity: 0;
+    transform:translate(-50%,-50%) scale(0.8) ;
+  }
+  100%{
+    opacity: 1;
+    transform: translate(-50%,-50%)  scale(1);
+  }
+  
+}
+dialog h5{
+  text-align: center;
+  color: grey;
+  font-size: 1rem;
+}
+dialog{
+  opacity: 0;
+  text-align: center;
+  width: 300px;
+  position: fixed;
+  top: 50%;
+  z-index: 100;
+  height: 35%;
+  border: none;
+  border-radius: 20px;
+  left: 50%;
+  transform: translate(-50%,-50%) scale(0.8);
+}
+dialog::backdrop {
+  background: rgba(0,0,0,1);
+}
 .phone-container a{
   color: white;
 }

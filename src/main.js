@@ -5,11 +5,11 @@ import { loadFonts } from './plugins/webfontloader'
 import { Quasar } from 'quasar'
 import quasarUserOptions from './quasar-user-options'
 import router from './router'
-
+import  LottieAnimation  from 'lottie-web-vue'
 import VueSweetalert2 from 'vue-sweetalert2';
 import 'sweetalert2/dist/sweetalert2.min.css';
 loadFonts()
 
 createApp(App).use(router).use(Quasar, quasarUserOptions)
-  .use(vuetify,{rtl:true}).use(VueSweetalert2)
+  .use(vuetify,{rtl:true}).use(VueSweetalert2).use(LottieAnimation)
   .mount('#app')
