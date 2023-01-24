@@ -22,14 +22,14 @@
                <div class="filter-btn">
                         <!-- <button class="revert-filter-btn"  @click="revertFilter(car)"> רענן <v-icon> mdi-refresh-circle</v-icon> </button> -->
 
-                            <button class="revert-filter-btn" v-if="!isFiltering" @click="isFiltering=true"> סנן</button>
+                            <button class="revert-filter-btn" v-if="!isFiltering" v-ripple @click="isFiltering=true"> <v-icon>mdi mdi-filter</v-icon></button>
 </div>
                <div class="filters-container" v-if="isFiltering">
                    <q-input filled dark    hide-bottom-space no-error-icon placeholder="כל התאריכים" :error="false" :model-value="!car.dateModel.from? '':`${`${car.dateModel.to.split('/')[2]}/${car.dateModel.to.split('/')[1]}/${car.dateModel.to.split('/')[0]}`} - ${`${car.dateModel.from.split('/')[2]}/${car.dateModel.from.split('/')[1]}/${car.dateModel.from.split('/')[0]}`}` " readonly   ref="timeRef" name="tidruh-time"   :rules="['timeOrFulltime']">
         <template v-slot:append>
           <q-icon name="access_time" class="cursor-pointer">
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                              <q-date @range-end="handleRange" v-model="car.dateModel" range   >
+                              <q-date @range-end="copy" v-model="car.dateModel" range   >
 
                 <div class="row items-center justify-end">
                   <q-btn v-close-popup label="סגור" color="primary" flat />
@@ -40,11 +40,14 @@
         </template>
       </q-input>
       <div class="drivers-select-container"> 
-            <q-input filled dark @update:model-value="(val)=>{handleDriver(car,val)}" placeholder="סנן לפי נהג" v-model="car.driverModel" hide-bottom-space no-error-icon  :error="false" />
+            <q-input filled dark  placeholder="סנן לפי נהג" v-model="car.driverModel" hide-bottom-space no-error-icon  :error="false" />
         </div>
-        <button class="revert-filter-btn"  @click="revertFilter(car)"> בטל סינון</button>
-        
+      
       </div>
+      <div class="btn-filters-container" v-if="isFiltering" >
+        <button class="revert-filter-btn sanen-btn"     @click="handleAll(car)"> סנן</button>
+                <button class="revert-filter-btn"    @click="revertFilter(car)"> בטל סינון</button>
+</div>
                 <table> 
                     <thead>
                         <tr>
@@ -115,6 +118,22 @@ export default {
         }
     },
     methods:{
+        handleAll(car){
+                                this.drivesSortedObject[car.carName] = [...this.backupReports[car.carName]]
+                 this.cars.forEach((carObject)=>{
+                if (carObject.carName == car.carName){
+                    console.log(carObject)
+                            this.handleDriver(carObject.driverModel)
+                            this.handleRange(carObject.dateModel)
+                 console.log(this.drivesSortedObject[this.slide])
+                    carObject.driverModel = "";
+                    carObject.dateModel = {from:"",to:""};
+                }
+                // this.isFiltering = false
+            })
+
+  
+        },
        async  deleteRecord(drive,index,arr,car){
         const swalAction = await this.$swal({icon:'warning',showCancelButton:true,showConfirmButton:true,confirmButtonText:'מחק',cancelButtonText:'חזור',title:':האם את בטוח שאתה רוצה למחוק את ',text:`דוח שבוצע בתאריך ${drive.date} ברכב ${this.slide}`,width:'300px',height:'300px'})
         if(swalAction.isConfirmed){
@@ -146,16 +165,16 @@ export default {
         }
 
         },
-        handleDriver(car,val){
+        handleDriver(val){
             console.log(val)
-            if(val){
-             this.drivesSortedObject[this.slide] =   this.drivesSortedObject[this.slide].filter((car)=>{
-              
-                return  car.driver.includes(val)
+            if(val.trim()){
+             this.drivesSortedObject[this.slide] =   this.drivesSortedObject[this.slide].filter((o)=>{
+              console.log(o.driver,val)
+                return  o.driver.includes(val)
             })
             }else{
-                console.log(car)
-                this.revertFilter(car)
+          
+                // this.revertFilter(car)
             }
         },
         
@@ -223,23 +242,21 @@ export default {
         },
       
         handleRange(object){
-            
-          this.startingDate =  new Date(`${object.from['month']}/${object.from['day']}/${object.from['year']}`)
-          this.endingDate =  new Date(`${object.to['month']}/${object.to['day']}/${object.to['year']}`)
-            const backupTo = object.to['year'];
-            const backupFrom = object.from['year'];
-            object.to['year'] = object.to['day'];
-            object.to['day'] = backupTo
-          object.from['year'] = object.from['day'];
-            object.from['day'] = backupFrom
             console.log(object)
+            if(object.from  && object.to){
+            const fromArr = object.from.split('/')
+                        const toArr = object.to.split('/')
+
+          this.startingDate =  new Date(`${fromArr[1]}/${fromArr[2]}/${fromArr[0]}`)
+          this.endingDate =  new Date(`${toArr[1]}/${toArr[2]}/${toArr[0]}`)
+     
             
             this.drivesSortedObject[this.slide] =   this.drivesSortedObject[this.slide].filter((car)=>{
                 let stru = car.date.split(' ')[ car.date.split(' ').length-1]
                 stru =  new Date(`${stru.split('/')[1]}/${stru.split('/')[0]}/${stru.split('/')[2]}`)
                 return this.dateCheck(this.startingDate,this.endingDate,stru)
             })
-        
+            }
         },
          checkPassword(){
             if(this.passValue == '0549936883'){
@@ -257,6 +274,23 @@ export default {
 </script>
 
 <style scoped>
+.sanen-btn{
+      color:white;
+  display: inline-block;
+  background-color: rgba(128, 128, 128, 0.753);
+  border-radius:15px;
+  padding:0.5em 1em;
+  text-decoration:none;
+}
+.btn-filters-container{
+    width: 320px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    justify-content: flex-end;
+}
 .filter-btn{
     display: flex;
     justify-content: space-evenly;
@@ -267,7 +301,8 @@ export default {
 .revert-filter-btn{
        display: inline-block;
     padding: 0.5em 1em;
-    background-color: rgba(0, 0, 0, 0.753);
+    font-size: 1rem;
+    /* background-color: rgba(0, 0, 0, 0.753); */
     color: white;
     text-decoration: none;
     border-radius: 20px;
@@ -320,7 +355,7 @@ table tbody{
     display: block;
     width: 320px;
     overflow: auto;
-    height: 450px;
+    height: 380px;
 }
 table tbody tr{
     width: 320px;
