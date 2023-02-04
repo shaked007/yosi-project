@@ -1,18 +1,6 @@
 <template>
-<h3 class="no-permissions-header" v-if="!isAuthenticated"> אין לך הרשאות לעמוד זה </h3>
-   <button class="printer-link" v-if="!$isMobile" @click="print" to="/print-view"><v-icon x-large   size="60">  mdi mdi-printer</v-icon></button>
 
- <div class="spinner-class">
-
-    <v-progress-circular v-if="!isFinished && spinnerStarter"
-      indeterminate
-      color="white"
-      size="90"
-    ></v-progress-circular>
-    </div>
-
-
-<div v-if="isAuthenticated  && isFinished">
+<div class="printer-container">
 
  <h4 class="main-title">טופס שילוח משימה</h4>
 
@@ -234,11 +222,7 @@
     </div>
    
   </div>
- <div class="phone-container">
-    <h6 > גדוד 383 - משרד קצין רכב </h6>
-   <h6> <a href="tel:054-993-6883"> 0549936883</a> - יוסי שושן</h6>
-    </div>
-    <br>
+
   </div>
 </template>
 
@@ -247,6 +231,7 @@ import axios from "axios"
 import moment from "moment"
 export default {
   name:"ReportView",
+  props:['reportProp'],
   data(){
     return{
       spinnerStarter:false,
@@ -269,109 +254,30 @@ export default {
     }
   },
   beforeMount(){
-    if(JSON.parse(sessionStorage.getItem("isAuthenticated"))){
-       
-        this.getReportById()
-    }else{
-      this.isAuthenticated = false;
-    }
+        this.report ={...this.reportProp}
     
   },
+  mounted(){
+
+  },
   methods:{
-    print(){
-      window.print()
-    },
-       async getReportById(){
-        this.spinnerStarter = true;
-        const reportResponse = await axios.get(this.url);
-        this.report = reportResponse.data[0];
-         this.currentDate = moment(new Date( this.report['date']),'L', 'he').format("יום dddd  D/M/y")
-         
-        Object.keys(this.report).forEach((item)=>{
-            if(item.includes('nosea')){
-              if(this.drivesObject[item.split('nosea')[1][0]]){
-                if(item.includes('num')){
-                        this.drivesObject[item.split('nosea')[1][0]]['num'] =this.report[item]
-                }else{
-                this.drivesObject[item.split('nosea')[1][0]]['name'] = this.report[item]
 
-                }
-              }else{
-                        this.drivesObject[item.split('nosea')[1][0]] = {}
-                             if(item.includes('num')){
-                        this.drivesObject[item.split('nosea')[1][0]]['num'] =this.report[item]
-                }else{
-                this.drivesObject[item.split('nosea')[1][0]]['name'] = this.report[item]
-
-                }
-              }
-            }
-  if(item.includes('contact')){
-              if(this.contactsObject[item.split('contact')[1][0]]){
-                if(item.includes('num')){
-                        this.contactsObject[item.split('contact')[1][0]]['num'] =this.report[item]
-                }else{
-                this.contactsObject[item.split('contact')[1][0]]['name'] = this.report[item]
-
-                }
-              }else{
-                        this.contactsObject[item.split('contact')[1][0]] = {}
-                             if(item.includes('num')){
-                        this.contactsObject[item.split('contact')[1][0]]['num'] =this.report[item]
-                }else{
-                this.contactsObject[item.split('contact')[1][0]]['name'] = this.report[item]
-
-                }
-              }
-            }
- if(item.includes('stop')){
-              if(this.stopsObject[item.split('stop')[1][0]]){
-                if(item.includes('num')){
-                        this.stopsObject[item.split('stop')[1][0]]['num'] =this.report[item]
-                }else{
-                this.stopsObject[item.split('stop')[1][0]]['name'] = this.report[item]
-                }
-              }else{
-                        this.stopsObject[item.split('stop')[1][0]] = {}
-                             if(item.includes('num')){
-                        this.stopsObject[item.split('stop')[1][0]]['num'] =this.report[item]
-                }else{
-                this.stopsObject[item.split('stop')[1][0]]['name'] = this.report[item]
-
-                }
-              }
-            }
-
-
-
-
-
-
-
-        })
-        console.log( this.drivesObject)
-        console.log(this.report)
-        this.report.date = moment(new Date(this.report.date),'L', 'he').format("יום dddd  D/M/y");
-           this.isAuthenticated = true;
-           this.isFinished = true
-        
-      }
+       
+      
   }
 }
 </script>
 
 <style scoped> 
-.printer-link{
-  position: absolute;
-  top: 1%;
-  left: 1%;
-  display: inline-block;
-  color: white;
-  background-color: black;
-  text-decoration: none;
-  outline: none;
-  border-radius: 20px;
-  padding: 0.5em 1em;
+@media print{
+     button{
+    display: none !important;
+  }
+    .printer-container{
+        float: none;
+        page-break-after:always !important;
+        
+    }
 }
 .phone-container a{
   color: white;

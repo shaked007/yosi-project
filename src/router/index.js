@@ -3,6 +3,9 @@ import HomeView from '../views/HomeView.vue'
 import ChooseReport from  '../views/ChooseReport.vue'
 import FormView from '../views/FormView.vue'
 import ReportView from "../views/ReportView.vue"
+import PrintView from "../views/PrintView.vue"
+import PrintFinalView from "../views/PrintFinalView.vue"
+
 const routes = [
   {
     path: '/',
@@ -22,6 +25,15 @@ const routes = [
     path: '/reports/:id',
     name: ':id',
     component: ReportView
+  },
+  {
+    path: '/print-view',
+    name: 'print-view',
+    component: PrintView
+  }, {
+    path: '/print-final-view',
+    name: 'print-final-view',
+    component: PrintFinalView
   },
   
 

@@ -4,9 +4,13 @@
  <h6 class="sub-title"> מסך הבית </h6>
 <!-- <FormView  v-if="isFormView" />
 <ReportView :urlParams="urlParams" v-if="isReportView" /> -->
+
 <div class="links-flex">
   <router-link v-ripple  class="report" to="fill-report">למילוי דוח</router-link>
   <router-link class="history" to="reports"> להיסטוריית דוחות</router-link>
+   </div>
+   <div v-if="!$isMobile" class="print-icon-container"> 
+   <router-link class="printer-link" to="/print-view"><v-icon x-large   size="60">  mdi mdi-printer</v-icon></router-link>
    </div>
 <img :src="require('../assets/383zameret.png')"> 
 </template>
@@ -18,16 +22,19 @@ export default {
   name: 'homeView',
   data(){
     return{
+      isMobile:"",
       isFormView:false,
       isReportView:false,
       urlParams:""
     }
   },
   methods:{
+
+
+     
     checkViewToRender(){
    
         const url = window.location.href;
-        console.log(url)
       
         if(url.includes('?')){
         
@@ -42,8 +49,6 @@ export default {
     
   },
     beforeMount(){
-      // this.$vuetify.rtl =true
-      console.log(this.$vuetify.rtl)
       // this.checkViewToRender()
     },
     components:{
@@ -55,6 +60,29 @@ export default {
 </script>
 
 <style scoped>
+.printer-link{
+  position: relative;
+  top: 100%;
+  display: inline-block;
+  color: white;
+  background-color: black;
+  text-decoration: none;
+  outline: none;
+  border-radius: 20px;
+  padding: 0.5em 1em;
+}
+.print-icon-container{
+  color: white;
+  text-align: center;
+
+
+}
+.print-icon-container button{
+    border-radius: 50%;
+  
+    padding: 1em;
+    background-color: rgba(0, 0, 0, 0.76);
+} 
 .links-flex .report{
   color:white;
   display: inline-block;

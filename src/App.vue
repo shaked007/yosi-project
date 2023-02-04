@@ -11,11 +11,14 @@
 export default {
   name: 'App',
   mounted(){
+    
+
 
     sessionStorage.setItem('isAuthenticated',JSON.stringify(false))
 
   },
  methods: {
+
       changeRTL () {
         this.$vuetify.rtl = true
       },
@@ -32,6 +35,13 @@ export default {
 
 
 @media print{
+  button{
+    display: none !important;
+  }
+   .printer-container{
+    
+        break-after:  always !important;
+    }
   input{
     color: black !important;
   }
