@@ -1,4 +1,6 @@
 <template>
+  <router-link to="/" class="go-back-btn">חזור</router-link>
+
   <h4 class="main-title">טופס שילוח משימה</h4>
   <h6 class="sub-title">היסטוריית דוחות</h6>
   <div class="password-container" v-if="!isAuthenticated">
@@ -540,5 +542,12 @@ table tbody tr td {
   border-radius: 20px;
   padding: 0.5em 1em;
   text-decoration: none;
+}
+.go-back-btn {
+  color: white;
+  font-size: 3rem;
+  display: flex;
+  justify-content: right;
+  margin-right: 2px;
 }
 </style>

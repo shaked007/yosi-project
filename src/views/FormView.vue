@@ -2,6 +2,7 @@
   <!-- <Nav/> -->
 
   <!-- <iframe name="hiddenFrame" width="0" height="0" border="0" style="display: none;"></iframe> -->
+  <router-link to="/" class="go-back-btn">חזור</router-link>
   <dialog @animationend.once="$refs.anim.play()" ref="dialog">
     <h6>!הדוח הועלה בהצלחה</h6>
     <h5>!שתהיה נסיעה טובה ובטוחה</h5>
@@ -593,5 +594,12 @@ form {
   margin-top: 20px;
   margin-bottom: 20px;
   color: white;
+}
+.go-back-btn {
+  color: white;
+  font-size: 3rem;
+  display: flex;
+  justify-content: right;
+  margin-right: 2px;
 }
 </style>
