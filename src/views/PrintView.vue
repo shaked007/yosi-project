@@ -105,7 +105,7 @@
       ref="select"
       v-model="carValue"
       :items="cars"
-      label="סוג הרכב + מס צ"
+      label='רכבים מפקדה'
       name="car"
       append-inner-icon="mdi-car"
     ></v-select>
