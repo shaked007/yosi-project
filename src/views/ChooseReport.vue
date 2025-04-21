@@ -187,8 +187,8 @@ export default {
           dateModel: { from: "", to: "" },
         },
         {
-          key: "טיוטה - צ`197807",
-          carName: "טיוטה - צ`197807",
+          key: "אופל - צ`158641",
+          carName: "אופל - צ`158641",
           driverModel: "",
           dateModel: { from: "", to: "" },
         },
@@ -211,7 +211,6 @@ export default {
           dateModel: { from: "", to: "" },
         },
       ],
-      // cars:['קנגו - צ`265465','קנגו- צ`265445','סוואנה - צ`297616','טיוטה - צ`197807','קולורדו - צ`187099','קולורדו - צ`187088','אופל - צ`153847'],
       isAuthenticated: false,
       placeholder: "הכנס סיסמא",
       passValue: "",

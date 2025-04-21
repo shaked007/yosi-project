@@ -140,6 +140,15 @@
               append-inner-icon="mdi-car"
             ></v-select>
           </div>
+          <v-select
+            required
+            v-model="selectedSquadCommanderCar"
+            :items="squadCommanderCar"
+            label='רכב מ"פ'
+            name="squad-comander-car"
+            append-inner-icon="mdi-clipboard-text"
+          ></v-select>
+
           <div id="radios">
             <v-radio-group
               mandatory
@@ -304,11 +313,18 @@ export default {
         "קנגו - צ`265465",
         "קנגו- צ`265445",
         "סוואנה - צ`297616",
-        "טיוטה - צ`197807",
+        "אופל - צ`158641",
         "קולורדו - צ`187099",
         "קולורדו - צ`187088",
         "אופל - צ`153847",
       ],
+      squadCommanderCar: [
+        'מ"פ טכנ"ל - קיה ריו -17664003',
+        'יונדאי - 35986602 I20 - מ"פ הפת"ק',
+        'מ"פ - ת.מטכ"ל - סיאט איביזה - 45832902',
+        'מ"פ שו"ב - סיאט איביזה - 45857002',
+      ],
+      selectedSquadCommanderCar: "",
       inputsObject: "",
       whatsappDomain: "whatsapp://send?",
       queryStringInputs: "",
