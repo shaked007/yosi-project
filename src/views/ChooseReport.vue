@@ -382,7 +382,7 @@ export default {
       }
     },
     checkPassword() {
-      if (this.passValue == "0529200800") {
+      if (this.passValue == "Maayan12!") {
         this.isAuthenticated = true;
         sessionStorage.setItem("isAuthenticated", JSON.stringify(true));
         this.getDrivesData();
