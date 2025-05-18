@@ -133,19 +133,20 @@
             <v-select
               ref="select"
               v-model="carValue"
+              :rules="[(v) => !!v || 'יש לבחור רכב']"
               :items="cars"
               label="סוג הרכב + מס צ"
               name="car"
               append-inner-icon="mdi-car"
             ></v-select>
           </div>
-          <v-select
+          <!-- <v-select
             v-model="selectedSquadCommanderCar"
             :items="squadCommanderCar"
             label='רכב מ"פ'
             name="squad-comander-car"
             append-inner-icon="mdi-clipboard-text"
-          ></v-select>
+          ></v-select> -->
 
           <div id="radios">
             <v-radio-group
@@ -301,9 +302,9 @@ export default {
       stops: 0,
       carValue: "",
       starterTime: "",
-      // rules: {
-      //   select: [(v) => v.length > 0 || "יש לבחור רכב"],
-      // },
+      rules: {
+        select: [(v) => v.length > 0 || "יש לבחור רכב"],
+      },
       nosim: 1,
 
       finishedTime: "",
@@ -315,8 +316,6 @@ export default {
         "קולורדו - צ`187088",
         "קיה פיקנטו - צ`25410902",
         "אופל - צ`158632",
-      ],
-      squadCommanderCar: [
         'מ"פ טכנ"ל - קיה ריו -17664003',
         'יונדאי - 35986602 I20 - מ"פ הפת"ק',
         'מ"פ - ת.מטכ"ל - סיאט איביזה - 45832902',
@@ -329,7 +328,8 @@ export default {
         'רס"ר - קיה פיקנטו - 73634903',
         '158637 - מ"מ ממסרים - אופל',
       ],
-      selectedSquadCommanderCar: "",
+      // squadCommanderCar: [],
+      // selectedSquadCommanderCar: "",
       inputsObject: "",
       whatsappDomain: "whatsapp://send?",
       queryStringInputs: "",
@@ -398,18 +398,18 @@ export default {
     },
     async handleSubmit(event) {
       let isTimeValid;
-      // let isCarValid;
+      let isCarValid;
       let isRadio1;
       let isRadio2;
       let isRadio3;
 
       try {
         isTimeValid = await this.$refs.timeRef.validate();
-        // isCarValid = await this.$refs.select.validate();
+        isCarValid = await this.$refs.select.validate();
 
         console.log(
           isTimeValid,
-          // isCarValid,
+          isCarValid,
           this.starterTime,
           this.radio1,
           this.radio2,
