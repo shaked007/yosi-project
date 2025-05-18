@@ -301,9 +301,9 @@ export default {
       stops: 0,
       carValue: "",
       starterTime: "",
-      rules: {
-        select: [(v) => v.length > 0 || "יש לבחור רכב"],
-      },
+      // rules: {
+      //   select: [(v) => v.length > 0 || "יש לבחור רכב"],
+      // },
       nosim: 1,
 
       finishedTime: "",
@@ -398,18 +398,18 @@ export default {
     },
     async handleSubmit(event) {
       let isTimeValid;
-      let isCarValid;
+      // let isCarValid;
       let isRadio1;
       let isRadio2;
       let isRadio3;
 
       try {
         isTimeValid = await this.$refs.timeRef.validate();
-        isCarValid = await this.$refs.select.validate();
+        // isCarValid = await this.$refs.select.validate();
 
         console.log(
           isTimeValid,
-          isCarValid,
+          // isCarValid,
           this.starterTime,
           this.radio1,
           this.radio2,
