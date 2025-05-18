@@ -133,7 +133,6 @@
             <v-select
               ref="select"
               v-model="carValue"
-              :rules="[(v) => !!v || 'יש לבחור רכב']"
               :items="cars"
               label="סוג הרכב + מס צ"
               name="car"
@@ -405,6 +404,9 @@ export default {
       let isRadio3;
 
       try {
+        isTimeValid = await this.$refs.timeRef.validate();
+        isCarValid = await this.$refs.select.validate();
+
         console.log(
           isTimeValid,
           isCarValid,
