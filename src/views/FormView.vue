@@ -405,9 +405,6 @@ export default {
       let isRadio3;
 
       try {
-        isTimeValid = await this.$refs.timeRef.validate();
-        isCarValid = await this.$refs.select.validate();
-
         console.log(
           isTimeValid,
           isCarValid,
